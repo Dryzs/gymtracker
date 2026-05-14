@@ -1,38 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#151923"/><stop offset="100%" stop-color="#07080c"/></linearGradient>
-    <style>
-      .title{font:900 44px Arial,sans-serif;fill:#f5f7fb}
-      .sub{font:700 24px Arial,sans-serif;fill:#a8b0c1}
-      .label{font:900 20px Arial,sans-serif;fill:#fff}
-      .note{font:800 18px Arial,sans-serif;fill:#a8b0c1}
-      .machine{fill:none;stroke:#3a4356;stroke-width:18;stroke-linecap:round;stroke-linejoin:round}
-      .machine2{fill:none;stroke:#566178;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
-      .person{fill:none;stroke:#e9edf7;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
-      .thin{fill:none;stroke:#e9edf7;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
-      .personFill{fill:#e9edf7}
-      .bar{stroke:#a8b0c1;stroke-width:16;stroke-linecap:round;fill:none}
-      .seat{fill:#232a3a;stroke:#6a7488;stroke-width:8}
-      .plate{fill:#202634;stroke:#8a94a8;stroke-width:7}
-      .arrow{fill:none;stroke:#ef3d3d;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:14 10;marker-end:url(#arrowhead)}
-      .highlight{fill:#ef3d3d}
-    </style>
-    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#ef3d3d"/></marker>
-  </defs>
-  <rect width="900" height="560" rx="42" fill="url(#bg)"/>
-  <rect x="28" y="28" width="844" height="504" rx="36" fill="none" stroke="#242b3a" stroke-width="3"/>
-  <text x="46" y="76" class="title">Schrägbankdrücken</text>
-  <text x="46" y="112" class="sub">Obere Brust</text>
-  
-        <path class="machine2" d="M275 430L590 245M250 445H720M315 445L270 505M665 445L725 505"/>
-        <circle class="plate" cx="730" cy="215" r="30"/><circle class="plate" cx="195" cy="215" r="30"/>
-        <path class="bar" d="M195 215H730"/>
-        <circle class="personFill" cx="420" cy="285" r="32"/>
-        <path class="person" d="M445 312L540 365L705 225M460 345L355 395M530 370L500 455M575 390L660 455"/>
-        <path class="arrow" d="M610 290C650 260 682 235 720 218"/>
-        <rect class="highlight" x="260" y="235" width="150" height="26" rx="13"/>
-        <text x="245" y="225" class="note">obere Brust</text>
-  <rect x="46" y="474" width="370" height="52" rx="18" fill="#111722" stroke="#293040" stroke-width="3"/>
-  <circle cx="76" cy="500" r="12" fill="#ef3d3d"/>
-  <text x="99" y="506" class="label">Zielmuskel: Obere Brust</text>
-</svg>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#151923"/><stop offset="100%" stop-color="#07080c"/></linearGradient>
+<style>.title{font:900 44px Arial,sans-serif;fill:#f5f7fb}.sub{font:700 24px Arial,sans-serif;fill:#a8b0c1}.label{font:900 20px Arial,sans-serif;fill:#fff}.small{font:800 18px Arial,sans-serif;fill:#a8b0c1}.machine{fill:none;stroke:#3a4356;stroke-width:18;stroke-linecap:round;stroke-linejoin:round}.machine2{fill:none;stroke:#566178;stroke-width:11;stroke-linecap:round;stroke-linejoin:round}.person{fill:none;stroke:#e9edf7;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}.personFill{fill:#e9edf7}.bar{stroke:#a8b0c1;stroke-width:16;stroke-linecap:round;fill:none}.seat{fill:#232a3a;stroke:#6a7488;stroke-width:8}.plate{fill:#202634;stroke:#8a94a8;stroke-width:7}.arrow{fill:none;stroke:#ef3d3d;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:14 10;marker-end:url(#arrowhead)}.highlight{fill:#ef3d3d}</style>
+<marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#ef3d3d"/></marker></defs>
+<rect width="900" height="560" rx="42" fill="url(#bg)"/><rect x="28" y="28" width="844" height="504" rx="36" fill="none" stroke="#242b3a" stroke-width="3"/>
+<text x="46" y="76" class="title">Schrägbankdrücken</text><text x="46" y="112" class="sub">Obere Brust</text>
+          <path d="M275 430L590 245M250 445H720M315 445L270 505M665 445L725 505" class="machine2"/>
+          <circle cx="730" cy="215" r="30" class="plate"/><circle cx="195" cy="215" r="30" class="plate"/>
+          <path d="M195 215H730" class="bar"/>
+          <circle cx="420" cy="285" r="32" class="personFill"/>
+          <path d="M445 312L540 365L705 225M460 345L355 395M530 370L500 455M575 390L660 455" class="person"/>
+          <path d="M610 290C650 260 682 235 720 218" class="arrow"/>
+          <rect x="260" y="235" width="150" height="28" rx="14" class="highlight"/>
+          <text x="245" y="225" class="small">obere Brust</text>
+        
+<rect x="46" y="474" width="370" height="52" rx="18" fill="#111722" stroke="#293040" stroke-width="3"/><circle cx="76" cy="500" r="12" fill="#ef3d3d"/><text x="99" y="506" class="label">Zielmuskel: Obere Brust</text></svg>
