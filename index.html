@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#07070a">
+  <meta name="theme-color" content="#080910">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="GymJournal">
@@ -14,167 +14,163 @@
 </head>
 <body>
   <div class="app">
-    <header class="hero">
+    <header class="top">
       <div>
-        <p class="eyebrow">GymJournal v3</p>
-        <h1>Train smarter.</h1>
-        <p class="sub">Dein Plan, deine Sätze, dein Fortschritt.</p>
+        <p class="eyebrow">GymJournal</p>
+        <h1 id="headline">Heute</h1>
+        <p id="subtitle">Dein Training wird geladen.</p>
       </div>
-      <div class="scoreBox">
-        <span id="totalSets">0</span>
-        <small>Sätze</small>
-      </div>
+      <button id="quickTimer" class="roundTimer">02:00</button>
     </header>
 
-    <nav class="tabs">
-      <button class="tab active" data-screen="plan">Plan</button>
-      <button class="tab" data-screen="today">Heute</button>
-      <button class="tab" data-screen="log">Log</button>
-      <button class="tab" data-screen="progress">Stats</button>
-    </nav>
-
     <main>
-      <section id="plan" class="screen active">
-        <div class="card glass">
-          <div class="cardHead">
-            <h2>Dein Wochenplan</h2>
-            <span class="pill">Cut + Muskelaufbau</span>
+      <section id="today" class="screen active">
+        <div class="heroCard">
+          <div class="heroTop">
+            <div>
+              <p class="label">Heute</p>
+              <h2 id="todayWorkout">Push schwer</h2>
+            </div>
+            <select id="workoutSelect"></select>
           </div>
-          <p class="hint">Ziel: Fett verlieren, Muskeln halten/aufbauen, Bauch sichtbar machen, Schulter/Rücken priorisieren.</p>
-          <div id="weeklyPlan" class="planGrid"></div>
+          <div class="progressWrap">
+            <div class="progressText">
+              <span id="exerciseProgressText">0 von 0 Übungen</span>
+              <span id="setProgressText">0 von 0 Sätzen</span>
+            </div>
+            <div class="barOuter"><div id="progressBar" class="barInner"></div></div>
+          </div>
+          <div class="nextBox">
+            <span class="miniLabel">Nächste Übung</span>
+            <b id="nextExercise">-</b>
+            <small id="nextLast">Letztes Gewicht: -</small>
+          </div>
+          <button id="startBtn" class="primary">Training starten</button>
         </div>
 
-        <div class="card">
-          <h2>Fokus</h2>
-          <div class="focusGrid">
-            <div class="focus"><b>1</b><span>Seitliche Schulter</span></div>
-            <div class="focus"><b>2</b><span>Rückenbreite</span></div>
-            <div class="focus"><b>3</b><span>Obere Brust</span></div>
-            <div class="focus"><b>4</b><span>Bauch</span></div>
-          </div>
+        <div class="sectionHead">
+          <h2>Übungen</h2>
+          <button id="collapseDone" class="chip">Erledigte ausblenden</button>
         </div>
+        <div id="exerciseCards" class="exerciseList"></div>
+      </section>
 
+      <section id="plan" class="screen">
         <div class="card">
-          <h2>Cardio-Regel</h2>
-          <p class="hint">Nach 3–4 Trainings pro Woche: 20–30 Minuten Steigungslaufband, normales Gehen, nicht rennen.</p>
+          <h2>Wochenplan</h2>
+          <p class="hint">Kompakter Plan für Fettverlust + Muskelaufbau mit Fokus auf Schulter, Rücken, obere Brust und Bauch.</p>
+          <div id="weekPlan" class="weekPlan"></div>
         </div>
       </section>
 
-      <section id="today" class="screen">
-        <div class="card glass">
-          <div class="cardHead">
-            <h2>Heute trainieren</h2>
-            <span id="todayDate" class="pill"></span>
-          </div>
-          <div class="splitButtons">
-            <button class="split active" data-workout="push1">Push schwer</button>
-            <button class="split" data-workout="pull1">Pull schwer</button>
-            <button class="split" data-workout="legs">Beine + Bauch</button>
-            <button class="split" data-workout="push2">Push Pump</button>
-            <button class="split" data-workout="pull2">Pull + Bauch</button>
-          </div>
+      <section id="stats" class="screen">
+        <div class="gridStats">
+          <div class="statCard"><span id="statWeek">0</span><small>Trainings diese Woche</small></div>
+          <div class="statCard"><span id="statSets">0</span><small>Sätze gesamt</small></div>
+          <div class="statCard"><span id="statVolume">0</span><small>kg Volumen</small></div>
+          <div class="statCard"><span id="statPR">0</span><small>PRs</small></div>
         </div>
 
         <div class="card">
-          <div class="cardHead">
-            <h2 id="workoutTitle">Push schwer</h2>
-            <button id="finishWorkout" class="mini">Fertig</button>
-          </div>
-          <div id="exerciseList" class="exerciseList"></div>
+          <h2>Volumen nach Muskelgruppe</h2>
+          <div id="muscleVolume" class="volumeBars"></div>
         </div>
 
         <div class="card">
-          <h2>Rest Timer</h2>
-          <div class="timer" id="timerDisplay">02:00</div>
-          <div class="timerGrid">
-            <button class="timerPreset" data-sec="60">60s</button>
-            <button class="timerPreset" data-sec="90">90s</button>
-            <button class="timerPreset active" data-sec="120">120s</button>
-            <button class="timerPreset" data-sec="180">180s</button>
+          <h2>Bestleistungen</h2>
+          <div id="prList" class="list"></div>
+        </div>
+
+        <div class="card">
+          <h2>Körpergewicht</h2>
+          <div class="two">
+            <input id="bodyDate" type="date">
+            <input id="bodyWeight" type="number" step="0.1" placeholder="90.0 kg">
           </div>
-          <button id="timerToggle" class="primary">Start / Pause</button>
+          <button id="saveBody" class="secondary">Körpergewicht speichern</button>
+          <div id="bodyChart" class="chart"></div>
+          <div id="bodyList" class="list compact"></div>
         </div>
       </section>
 
       <section id="log" class="screen">
         <div class="card">
-          <h2>Verlauf</h2>
+          <h2>Trainingslog</h2>
           <input id="search" placeholder="Übung suchen">
-          <select id="filterWorkout">
-            <option value="">Alle Workouts</option>
-            <option value="push1">Push schwer</option>
-            <option value="pull1">Pull schwer</option>
-            <option value="legs">Beine + Bauch</option>
-            <option value="push2">Push Pump</option>
-            <option value="pull2">Pull + Bauch</option>
-          </select>
-          <div id="logList" class="logList"></div>
-        </div>
-      </section>
-
-      <section id="progress" class="screen">
-        <div class="card glass">
-          <h2>Bestleistungen</h2>
-          <p class="hint">PR wird pro Übung nach dem stärksten Satz berechnet.</p>
-          <div id="prList" class="logList"></div>
+          <select id="filterWorkout"></select>
+          <div id="logList" class="list"></div>
         </div>
 
         <div class="card">
-          <h2>Körpergewicht</h2>
-          <div class="twoGrid">
-            <div>
-              <label>Datum</label>
-              <input id="bodyDate" type="date">
-            </div>
-            <div>
-              <label>kg</label>
-              <input id="bodyWeight" type="number" step="0.1" inputmode="decimal" placeholder="90.0">
-            </div>
-          </div>
-          <button id="saveBody" class="secondary">Speichern</button>
-          <div id="bodyList" class="logList compact"></div>
-        </div>
-
-        <div class="card">
-          <h2>Daten</h2>
+          <h2>Backup</h2>
           <button id="exportCsv" class="secondary">CSV exportieren</button>
-          <button id="clearAll" class="danger">Alles löschen</button>
-          <p class="hint">Daten werden lokal auf diesem Gerät gespeichert.</p>
+          <button id="exportJson" class="secondary">Backup erstellen</button>
+          <label class="fileBtn">Backup importieren
+            <input id="importJson" type="file" accept="application/json">
+          </label>
+          <button id="clearAll" class="danger">Alle Daten löschen</button>
         </div>
       </section>
     </main>
+
+    <nav class="bottomNav">
+      <button class="navBtn active" data-screen="today">🏋️<span>Heute</span></button>
+      <button class="navBtn" data-screen="plan">📅<span>Plan</span></button>
+      <button class="navBtn" data-screen="stats">📈<span>Stats</span></button>
+      <button class="navBtn" data-screen="log">🧾<span>Log</span></button>
+    </nav>
   </div>
 
   <div id="setModal" class="modal hidden">
-    <div class="modalBox">
-      <div class="cardHead">
-        <h2 id="modalExercise">Übung</h2>
-        <button id="closeModal" class="mini">X</button>
+    <div class="sheet">
+      <div class="sheetHead">
+        <div>
+          <p class="label" id="modalMuscle">Muskel</p>
+          <h2 id="modalExercise">Übung</h2>
+        </div>
+        <button id="closeModal" class="iconBtn">×</button>
       </div>
 
-      <div id="movementDemo" class="demo"></div>
-      <p id="exerciseTip" class="hint"></p>
-      <div id="lastSetInfo" class="lastSet">Noch kein letzter Satz.</div>
-
-      <div class="threeGrid">
-        <div>
-          <label>Satz</label>
-          <input id="setNo" type="number" min="1" value="1">
-        </div>
-        <div>
-          <label>kg</label>
-          <input id="weight" type="number" step="0.5" inputmode="decimal" placeholder="80">
-        </div>
-        <div>
-          <label>Wdh.</label>
-          <input id="reps" type="number" inputmode="numeric" placeholder="10">
-        </div>
+      <div id="demo" class="demo"></div>
+      <div class="tips">
+        <p><b>Zielmuskel:</b> <span id="targetMuscle"></span></p>
+        <p><b>Tipp:</b> <span id="techTip"></span></p>
+        <p><b>Fehler vermeiden:</b> <span id="avoidTip"></span></p>
       </div>
 
-      <label>Notiz</label>
-      <input id="note" placeholder="z.B. sauber, schwer, letzter Satz">
+      <div class="suggestion">
+        <span>Vorschlag heute</span>
+        <b id="suggestionText">-</b>
+        <small id="lastText">Letztes Training: -</small>
+      </div>
 
-      <button id="saveSet" class="primary">Satz speichern</button>
+      <div class="three">
+        <div><label>Satz</label><input id="setNo" type="number" min="1"></div>
+        <div><label>kg</label><input id="weight" type="number" step="0.5" inputmode="decimal"></div>
+        <div><label>Wdh.</label><input id="reps" type="number" inputmode="numeric"></div>
+      </div>
+      <input id="note" placeholder="Notiz, z.B. sauber oder schwer">
+
+      <div class="modalActions">
+        <button id="saveSet" class="primary">Speichern</button>
+        <button id="copyLast" class="secondary">Letzten kopieren</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal hidden">
+    <div class="sheet">
+      <div class="sheetHead">
+        <h2>Satz bearbeiten</h2>
+        <button id="closeEdit" class="iconBtn">×</button>
+      </div>
+      <div class="three">
+        <div><label>Satz</label><input id="editSetNo" type="number"></div>
+        <div><label>kg</label><input id="editWeight" type="number" step="0.5"></div>
+        <div><label>Wdh.</label><input id="editReps" type="number"></div>
+      </div>
+      <input id="editNote" placeholder="Notiz">
+      <button id="saveEdit" class="primary">Änderung speichern</button>
     </div>
   </div>
 
