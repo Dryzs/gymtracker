@@ -1,173 +1,22 @@
-const KEY = "gymtracker_entries_v1";
-const EXERCISES = [
-  "Bankdrücken Maschine","Schrägbankdrücken","Butterfly","Dips",
-  "Schulterdrücken Maschine","Seitheben","Reverse Butterfly",
-  "Trizeps Pushdown","Überkopf Trizepsstrecken",
-  "Latziehen eng","Latziehen breit","Rudern eng","Chest Supported Row","Face Pulls","Deadlift",
-  "Normale Curls","Hammercurls","Bayesian Curls",
-  "Beinpresse","Romanian Deadlift","Beinbeuger","Beinstrecker","Wadenheben",
-  "Kabel Crunches","Hanging Knee Raises","Leg Raises","Plank","Russian Twists",
-  "Steigung Laufband"
-];
-
-const $ = id => document.getElementById(id);
-let deferredPrompt = null;
-
-function today(){ return new Date().toISOString().slice(0,10); }
-function getEntries(){ return JSON.parse(localStorage.getItem(KEY) || "[]"); }
-function setEntries(v){ localStorage.setItem(KEY, JSON.stringify(v)); }
-
-function init(){
-  $("date").value = today();
-  EXERCISES.forEach(e=>{
-    const opt = document.createElement("option");
-    opt.value = e;
-    $("exerciseList").appendChild(opt);
-  });
-
-  document.querySelectorAll(".tab").forEach(btn=>{
-    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
-  });
-
-  $("saveBtn").addEventListener("click", saveEntry);
-  $("search").addEventListener("input", render);
-  $("filterDay").addEventListener("change", render);
-  $("exportBtn").addEventListener("click", exportCSV);
-  $("clearBtn").addEventListener("click", clearAll);
-
-  window.addEventListener("beforeinstallprompt", e=>{
-    e.preventDefault();
-    deferredPrompt = e;
-    $("installBtn").classList.remove("hidden");
-  });
-  $("installBtn").addEventListener("click", async ()=>{
-    if(!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    $("installBtn").classList.add("hidden");
-  });
-
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js");
-  }
-
-  render();
-}
-
-function switchTab(tab){
-  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
-  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active", s.id===tab));
-  render();
-}
-
-function saveEntry(){
-  const entry = {
-    id: Date.now(),
-    date: $("date").value,
-    day: $("day").value,
-    exercise: $("exercise").value.trim(),
-    setNo: Number($("setNo").value || 1),
-    weight: Number($("weight").value || 0),
-    reps: Number($("reps").value || 0),
-    note: $("note").value.trim()
-  };
-
-  if(!entry.exercise || entry.weight <= 0 || entry.reps <= 0){
-    $("saveMsg").textContent = "Bitte Übung, Gewicht und Wiederholungen eintragen.";
-    return;
-  }
-
-  const entries = getEntries();
-  entries.unshift(entry);
-  setEntries(entries);
-
-  $("setNo").value = entry.setNo + 1;
-  $("weight").value = "";
-  $("reps").value = "";
-  $("note").value = "";
-  $("saveMsg").textContent = "Gespeichert.";
-  setTimeout(()=>$("saveMsg").textContent="",1400);
-  render();
-}
-
-function entryHtml(e){
-  return `<div class="item">
-    <div class="itemTop">
-      <div>
-        <div class="itemTitle">${escapeHtml(e.exercise)}</div>
-        <div class="itemMeta">${e.date} · ${e.day} · Satz ${e.setNo}<br>${e.weight} kg × ${e.reps} Wdh.${e.note ? " · " + escapeHtml(e.note) : ""}</div>
-      </div>
-      <button class="xbtn" onclick="deleteEntry(${e.id})">X</button>
-    </div>
-  </div>`;
-}
-
-function render(){
-  const entries = getEntries();
-  const t = today();
-  const todayEntries = entries.filter(e=>e.date===t);
-  $("todayList").innerHTML = todayEntries.length ? todayEntries.map(entryHtml).join("") : "<p class='hint'>Heute noch nichts gespeichert.</p>";
-
-  const q = $("search").value.toLowerCase();
-  const fd = $("filterDay").value;
-  const filtered = entries.filter(e => 
-    (!q || e.exercise.toLowerCase().includes(q)) &&
-    (!fd || e.day === fd)
-  );
-  $("historyList").innerHTML = filtered.length ? filtered.map(entryHtml).join("") : "<p class='hint'>Keine Einträge gefunden.</p>";
-
-  renderStats(entries);
-}
-
-function renderStats(entries){
-  const best = {};
-  for(const e of entries){
-    const score = e.weight * (1 + e.reps / 30); // grobe 1RM-Schätzung
-    if(!best[e.exercise] || score > best[e.exercise].score){
-      best[e.exercise] = {...e, score};
-    }
-  }
-  const rows = Object.values(best).sort((a,b)=>b.score-a.score);
-  $("statsList").innerHTML = rows.length ? rows.map(e=>`
-    <div class="item">
-      <div class="itemTitle">${escapeHtml(e.exercise)}</div>
-      <div class="itemMeta">Bester Satz: ${e.weight} kg × ${e.reps} Wdh. · ${e.date}<br>Geschätzte Stärke: ${e.score.toFixed(1)}</div>
-    </div>
-  `).join("") : "<p class='hint'>Noch keine Statistiken vorhanden.</p>";
-}
-
-function deleteEntry(id){
-  setEntries(getEntries().filter(e=>e.id!==id));
-  render();
-}
-
-function clearAll(){
-  if(confirm("Wirklich alle Trainingsdaten löschen?")){
-    localStorage.removeItem(KEY);
-    render();
-  }
-}
-
-function exportCSV(){
-  const entries = getEntries();
-  if(!entries.length){ alert("Keine Daten vorhanden."); return; }
-  const header = ["Datum","Trainingstag","Übung","Satz","Gewicht","Wiederholungen","Notiz"];
-  const rows = entries.map(e=>[e.date,e.day,e.exercise,e.setNo,e.weight,e.reps,e.note]);
-  const csv = [header,...rows].map(r=>r.map(v=>`"${String(v ?? "").replaceAll('"','""')}"`).join(";")).join("\n");
-  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "gymtracker.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function escapeHtml(str){
-  return String(str).replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
-}
-
+const TRAIN_KEY="gymjournal_training_v2";const BODY_KEY="gymjournal_body_v2";
+const exercises={Push:["Bankdrücken Maschine","Schrägbankdrücken","Butterfly","Dips","Schulterdrücken Maschine","Seitheben","Reverse Butterfly","Trizeps Pushdown","Überkopf Trizepsstrecken","Eigene Übung"],Pull:["Latziehen eng","Latziehen breit","Rudern eng","Chest Supported Row","Face Pulls","Deadlift","Normale Curls","Hammercurls","Bayesian Curls","Eigene Übung"],Beine:["Beinpresse","Romanian Deadlift","Beinbeuger","Beinstrecker","Wadenheben","Eigene Übung"],Bauch:["Kabel Crunches","Hanging Knee Raises","Leg Raises","Plank","Russian Twists","Eigene Übung"],Cardio:["Steigung Laufband","Fahrrad","Crosstrainer","Eigene Übung"],Sonstiges:["Eigene Übung"]};
+const $=id=>document.getElementById(id);let currentDay="Push",lastDeleted=null,timerSec=120,timerLeft=120,timerRun=false,timerId=null;
+function today(){return new Date().toISOString().slice(0,10)}function deDate(s){return new Date(s+"T00:00:00").toLocaleDateString("de-AT")}function getTrain(){return JSON.parse(localStorage.getItem(TRAIN_KEY)||"[]")}function setTrain(v){localStorage.setItem(TRAIN_KEY,JSON.stringify(v))}function getBody(){return JSON.parse(localStorage.getItem(BODY_KEY)||"[]")}function setBody(v){localStorage.setItem(BODY_KEY,JSON.stringify(v))}
+function init(){$("todayDate").textContent=deDate(today());$("bodyDate").value=today();document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchScreen(b.dataset.screen)));document.querySelectorAll(".day").forEach(b=>b.addEventListener("click",()=>setDay(b.dataset.day)));$("exerciseSelect").addEventListener("change",onExerciseChange);$("clearExercise").addEventListener("click",()=>{$("exerciseSelect").selectedIndex=0;onExerciseChange()});$("saveSet").addEventListener("click",saveSet);$("undoBtn").addEventListener("click",undoDelete);$("search").addEventListener("input",render);$("filterDay").addEventListener("change",render);$("exportCsv").addEventListener("click",exportCsv);$("clearAll").addEventListener("click",clearAll);$("saveBody").addEventListener("click",saveBody);document.querySelectorAll(".timerPreset").forEach(b=>b.addEventListener("click",()=>setTimer(Number(b.dataset.sec))));$("timerStart").addEventListener("click",toggleTimer);$("timerReset").addEventListener("click",()=>setTimer(timerSec));if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");setDay("Push");setTimer(120);render()}
+function switchScreen(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));render()}
+function setDay(day){currentDay=day;document.querySelectorAll(".day").forEach(b=>b.classList.toggle("active",b.dataset.day===day));const sel=$("exerciseSelect");sel.innerHTML="";exercises[day].forEach(ex=>{const o=document.createElement("option");o.value=ex;o.textContent=ex;sel.appendChild(o)});$("customExercise").style.display="none";onExerciseChange()}
+function onExerciseChange(){const ex=getExercise();$("customExercise").style.display=$("exerciseSelect").value==="Eigene Übung"?"block":"none";const entries=getTrain().filter(e=>e.exercise===ex).sort((a,b)=>b.id-a.id);const last=entries[0];if(last){$("lastBox").textContent=`Letzter Satz: ${last.weight} kg × ${last.reps} Wdh. am ${deDate(last.date)}`;const todaySets=getTrain().filter(e=>e.date===today()&&e.exercise===ex).length;$("setNo").value=todaySets+1}else{$("lastBox").textContent="Noch kein letzter Satz vorhanden.";$("setNo").value=1}}
+function getExercise(){const val=$("exerciseSelect").value;return val==="Eigene Übung"?$("customExercise").value.trim():val}
+function saveSet(){const exercise=getExercise(),weight=Number($("weight").value),reps=Number($("reps").value);if(!exercise||!weight||!reps){$("msg").textContent="Bitte Übung, Gewicht und Wiederholungen eintragen.";return}const entry={id:Date.now(),date:today(),day:currentDay,exercise,setNo:Number($("setNo").value||1),weight,reps,note:$("note").value.trim()};const data=getTrain();data.unshift(entry);setTrain(data);$("weight").value="";$("reps").value="";$("note").value="";$("setNo").value=entry.setNo+1;$("msg").textContent="Gespeichert.";setTimeout(()=>$("msg").textContent="",1400);onExerciseChange();render()}
+function itemHtml(e){return `<div class="item"><div class="itemTop"><div><div class="itemTitle">${esc(e.exercise)}</div><div class="itemMeta">${deDate(e.date)} · ${e.day} · Satz ${e.setNo}<br>${e.weight} kg × ${e.reps} Wdh.${e.note?" · "+esc(e.note):""}</div></div><button class="deleteBtn" onclick="deleteSet(${e.id})">X</button></div></div>`}
+function render(){const data=getTrain();$("entryCount").textContent=data.length;const td=data.filter(e=>e.date===today());$("todayList").innerHTML=td.length?td.map(itemHtml).join(""):`<p class="hint">Heute noch nichts gespeichert.</p>`;const q=$("search").value?.toLowerCase()||"",fd=$("filterDay").value||"";const filtered=data.filter(e=>(!q||e.exercise.toLowerCase().includes(q))&&(!fd||e.day===fd));$("historyList").innerHTML=filtered.length?filtered.map(itemHtml).join(""):`<p class="hint">Keine Einträge gefunden.</p>`;renderPr(data);renderBody()}
+function renderPr(data){const best={};for(const e of data){const score=e.weight*(1+e.reps/30);if(!best[e.exercise]||score>best[e.exercise].score)best[e.exercise]={...e,score}}const list=Object.values(best).sort((a,b)=>b.score-a.score);$("prList").innerHTML=list.length?list.map(e=>`<div class="item"><div class="itemTitle">${esc(e.exercise)}</div><div class="itemMeta">PR: ${e.weight} kg × ${e.reps} Wdh. · ${deDate(e.date)}<br>Score: ${e.score.toFixed(1)}</div></div>`).join(""):`<p class="hint">Noch keine Bestleistungen vorhanden.</p>`}
+function saveBody(){const weight=Number($("bodyWeight").value);if(!weight)return;const data=getBody();data.unshift({id:Date.now(),date:$("bodyDate").value||today(),weight});setBody(data);$("bodyWeight").value="";renderBody()}
+function renderBody(){const data=getBody().slice(0,8);$("bodyList").innerHTML=data.length?data.map(e=>`<div class="item"><div class="itemTitle">${e.weight} kg</div><div class="itemMeta">${deDate(e.date)}</div></div>`).join(""):`<p class="hint">Noch kein Körpergewicht gespeichert.</p>`}
+function deleteSet(id){const data=getTrain();lastDeleted=data.find(e=>e.id===id);setTrain(data.filter(e=>e.id!==id));render();onExerciseChange()}
+function undoDelete(){if(!lastDeleted)return;const data=getTrain();data.unshift(lastDeleted);setTrain(data);lastDeleted=null;render();onExerciseChange()}
+function setTimer(sec){timerSec=sec;timerLeft=sec;timerRun=false;clearInterval(timerId);updateTimer()}function toggleTimer(){if(timerRun){timerRun=false;clearInterval(timerId)}else{timerRun=true;timerId=setInterval(()=>{timerLeft--;updateTimer();if(timerLeft<=0){clearInterval(timerId);timerRun=false;if(navigator.vibrate)navigator.vibrate([300,120,300])}},1000)}}function updateTimer(){const m=Math.floor(timerLeft/60).toString().padStart(2,"0"),s=(timerLeft%60).toString().padStart(2,"0");$("timerDisplay").textContent=`${m}:${s}`}
+function exportCsv(){const data=getTrain();if(!data.length){alert("Keine Trainingsdaten vorhanden.");return}const header=["Datum","Tag","Übung","Satz","Gewicht","Wiederholungen","Notiz"];const csv=[header,...data.map(e=>[e.date,e.day,e.exercise,e.setNo,e.weight,e.reps,e.note])].map(row=>row.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(";")).join("\\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="gymjournal-training.csv";a.click()}
+function clearAll(){if(confirm("Wirklich alle Daten löschen?")){localStorage.removeItem(TRAIN_KEY);localStorage.removeItem(BODY_KEY);render()}}
+function esc(str){return String(str).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 init();

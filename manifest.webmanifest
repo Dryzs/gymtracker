@@ -1,10 +1,10 @@
 {
-  "name": "GymTracker",
-  "short_name": "GymTracker",
+  "name": "GymJournal",
+  "short_name": "GymJournal",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0d0d0f",
-  "theme_color": "#111111",
+  "background_color": "#050506",
+  "theme_color": "#050506",
   "orientation": "portrait",
   "icons": [
     {
