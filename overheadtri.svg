@@ -21,10 +21,17 @@
   </defs>
   <rect width="900" height="560" rx="42" fill="url(#bg)"/>
   <rect x="28" y="28" width="844" height="504" rx="36" fill="none" stroke="#242b3a" stroke-width="3"/>
-  <text x="46" y="76" class="title">Pause</text>
-  <text x="46" y="112" class="sub">Regeneration</text>
-  <text x="280" y="285" class="title">PAUSE</text>
+  <text x="46" y="76" class="title">Trizeps Pushdown</text>
+  <text x="46" y="112" class="sub">Kabelzug</text>
+  
+        <path class="machine" d="M210 110V455M210 130H420"/>
+        <circle class="personFill" cx="545" cy="205" r="34"/>
+        <path class="person" d="M545 240V380M525 270L435 185M565 270L475 185M525 300L525 395M565 300L565 395M545 380L500 455M545 380L590 455"/>
+        <path class="arrow" d="M455 185C470 245 500 300 525 360"/>
+        <path class="arrow" d="M455 185C500 245 540 300 565 360"/>
+        <rect class="highlight" x="495" y="320" width="105" height="26" rx="13"/>
+        <text x="505" y="310" class="note">Trizeps</text>
   <rect x="46" y="474" width="370" height="52" rx="18" fill="#111722" stroke="#293040" stroke-width="3"/>
   <circle cx="76" cy="500" r="12" fill="#ef3d3d"/>
-  <text x="99" y="506" class="label">Zielmuskel: Erholung</text>
+  <text x="99" y="506" class="label">Zielmuskel: Trizeps</text>
 </svg>

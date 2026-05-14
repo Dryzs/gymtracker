@@ -21,10 +21,18 @@
   </defs>
   <rect width="900" height="560" rx="42" fill="url(#bg)"/>
   <rect x="28" y="28" width="844" height="504" rx="36" fill="none" stroke="#242b3a" stroke-width="3"/>
-  <text x="46" y="76" class="title">Pause</text>
-  <text x="46" y="112" class="sub">Regeneration</text>
-  <text x="280" y="285" class="title">PAUSE</text>
+  <text x="46" y="76" class="title">Seitheben</text>
+  <text x="46" y="112" class="sub">Seitliche Schulter</text>
+  
+        <circle class="personFill" cx="450" cy="180" r="34"/>
+        <path class="person" d="M450 215V355M435 245L260 220M465 245L640 220M450 355L385 470M450 355L515 470"/>
+        <circle class="plate" cx="245" cy="218" r="24"/><circle class="plate" cx="655" cy="218" r="24"/>
+        <path class="arrow" d="M300 315C250 290 230 260 220 225"/>
+        <path class="arrow" d="M600 315C650 290 670 260 680 225"/>
+        <rect class="highlight" x="340" y="235" width="95" height="26" rx="13"/>
+        <rect class="highlight" x="465" y="235" width="95" height="26" rx="13"/>
+        <text x="330" y="215" class="note">seitliche Schulter</text>
   <rect x="46" y="474" width="370" height="52" rx="18" fill="#111722" stroke="#293040" stroke-width="3"/>
   <circle cx="76" cy="500" r="12" fill="#ef3d3d"/>
-  <text x="99" y="506" class="label">Zielmuskel: Erholung</text>
+  <text x="99" y="506" class="label">Zielmuskel: Seitliche Schulter</text>
 </svg>

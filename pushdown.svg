@@ -21,10 +21,17 @@
   </defs>
   <rect width="900" height="560" rx="42" fill="url(#bg)"/>
   <rect x="28" y="28" width="844" height="504" rx="36" fill="none" stroke="#242b3a" stroke-width="3"/>
-  <text x="46" y="76" class="title">Pause</text>
-  <text x="46" y="112" class="sub">Regeneration</text>
-  <text x="280" y="285" class="title">PAUSE</text>
+  <text x="46" y="76" class="title">Face Pulls</text>
+  <text x="46" y="112" class="sub">Kabelzug</text>
+  
+        <path class="machine" d="M170 110V455M170 130H360"/>
+        <circle class="personFill" cx="575" cy="230" r="34"/>
+        <path class="person" d="M575 265V385M550 285L380 170M600 285L380 170M575 380L520 455M575 380L625 455"/>
+        <path class="arrow" d="M380 170C445 190 505 215 555 248"/>
+        <path class="arrow" d="M380 170C455 175 530 205 612 248"/>
+        <rect class="highlight" x="455" y="270" width="235" height="26" rx="13"/>
+        <text x="470" y="260" class="note">hintere Schulter</text>
   <rect x="46" y="474" width="370" height="52" rx="18" fill="#111722" stroke="#293040" stroke-width="3"/>
   <circle cx="76" cy="500" r="12" fill="#ef3d3d"/>
-  <text x="99" y="506" class="label">Zielmuskel: Erholung</text>
+  <text x="99" y="506" class="label">Zielmuskel: Hintere Schulter</text>
 </svg>

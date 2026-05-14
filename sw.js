@@ -1,5 +1,5 @@
-const CACHE="gymjournal-v6";
-const FILES=["./","./index.html","./style.css?v=6","./app.js?v=6","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
-self.addEventListener("install",event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)))});
-self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
-self.addEventListener("fetch",event=>event.respondWith(caches.match(event.request).then(response=>response||fetch(event.request))));
+const CACHE="gymjournal-v7";
+const FILES=["./", "./index.html", "./style.css?v=7", "./app.js?v=7", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./assets/bench.svg", "./assets/incline.svg", "./assets/butterfly.svg", "./assets/shoulderpress.svg", "./assets/lateral.svg", "./assets/reversefly.svg", "./assets/latpulldown.svg", "./assets/seatedrow.svg", "./assets/chestrow.svg", "./assets/facepull.svg", "./assets/pushdown.svg", "./assets/overheadtri.svg", "./assets/curl.svg", "./assets/legpress.svg", "./assets/rdl.svg", "./assets/legcurl.svg", "./assets/legextension.svg", "./assets/calf.svg", "./assets/cablecrunch.svg", "./assets/legraise.svg", "./assets/treadmill.svg", "./assets/dips.svg", "./assets/rest.svg"];
+self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
+self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));

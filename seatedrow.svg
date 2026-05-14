@@ -21,10 +21,20 @@
   </defs>
   <rect width="900" height="560" rx="42" fill="url(#bg)"/>
   <rect x="28" y="28" width="844" height="504" rx="36" fill="none" stroke="#242b3a" stroke-width="3"/>
-  <text x="46" y="76" class="title">Pause</text>
-  <text x="46" y="112" class="sub">Regeneration</text>
-  <text x="280" y="285" class="title">PAUSE</text>
+  <text x="46" y="76" class="title">Latziehen</text>
+  <text x="46" y="112" class="sub">Latmaschine</text>
+  
+        <path class="machine" d="M220 115H680M250 115V455M650 115V455"/>
+        <path class="bar" d="M300 150H600"/>
+        <rect class="seat" x="380" y="385" width="150" height="55" rx="20"/>
+        <circle class="personFill" cx="455" cy="235" r="34"/>
+        <path class="person" d="M455 270V385M425 260L330 165M485 260L580 165M455 380L405 455M455 380L505 455"/>
+        <path class="arrow" d="M330 165C350 220 380 250 420 280"/>
+        <path class="arrow" d="M580 165C560 220 530 250 490 280"/>
+        <rect class="highlight" x="300" y="285" width="115" height="26" rx="13"/>
+        <rect class="highlight" x="495" y="285" width="115" height="26" rx="13"/>
+        <text x="320" y="275" class="note">Lat ziehen</text>
   <rect x="46" y="474" width="370" height="52" rx="18" fill="#111722" stroke="#293040" stroke-width="3"/>
   <circle cx="76" cy="500" r="12" fill="#ef3d3d"/>
-  <text x="99" y="506" class="label">Zielmuskel: Erholung</text>
+  <text x="99" y="506" class="label">Zielmuskel: Lat / Rückenbreite</text>
 </svg>
