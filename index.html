@@ -3,177 +3,265 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#080910">
+  <meta name="theme-color" content="#07080c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="GymJournal">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=5">
   <title>GymJournal</title>
 </head>
 <body>
-  <div class="app">
-    <header class="top">
+  <div class="appShell">
+    <header class="appHeader">
       <div>
-        <p class="eyebrow">GymJournal</p>
-        <h1 id="headline">Heute</h1>
-        <p id="subtitle">Dein Training wird geladen.</p>
+        <div class="brandRow">
+          <span class="brandIcon">▰</span>
+          <span class="brand">GYM<span>JOURNAL</span></span>
+        </div>
+        <p id="headerSub">Dein Training. Dein Fortschritt. Dein Ziel.</p>
       </div>
-      <button id="quickTimer" class="roundTimer">02:00</button>
+      <button id="timerButton" class="timerBubble">02:00</button>
     </header>
 
     <main>
-      <section id="today" class="screen active">
-        <div class="heroCard">
-          <div class="heroTop">
+      <section id="screenToday" class="screen active">
+        <div class="dashboardCard">
+          <div class="dashTop">
             <div>
-              <p class="label">Heute</p>
-              <h2 id="todayWorkout">Push schwer</h2>
+              <p class="kicker">Heute</p>
+              <h1 id="todayTitle">Push schwer</h1>
+              <p id="todayDate">Montag</p>
+            </div>
+            <div class="ring">
+              <svg viewBox="0 0 44 44">
+                <circle cx="22" cy="22" r="18" class="ringBg"></circle>
+                <circle cx="22" cy="22" r="18" class="ringValue" id="ringValue"></circle>
+              </svg>
+              <span id="ringText">0%</span>
+            </div>
+          </div>
+
+          <div class="dashStats">
+            <div><b id="doneExercises">0/0</b><span>Übungen</span></div>
+            <div><b id="doneSets">0/0</b><span>Sätze</span></div>
+            <div><b id="todayVolume">0 kg</b><span>Volumen</span></div>
+          </div>
+
+          <div class="nextCard">
+            <div>
+              <p>Nächste Übung</p>
+              <h2 id="nextExercise">-</h2>
+              <span id="nextInfo">-</span>
+            </div>
+            <div id="nextVisual" class="nextVisual"></div>
+          </div>
+
+          <button id="startTraining" class="primary big">Training starten</button>
+        </div>
+
+        <div class="card">
+          <div class="cardHead">
+            <div>
+              <p class="kicker">Training auswählen</p>
+              <h2>Automatisch nach Wochentag</h2>
             </div>
             <select id="workoutSelect"></select>
           </div>
-          <div class="progressWrap">
-            <div class="progressText">
-              <span id="exerciseProgressText">0 von 0 Übungen</span>
-              <span id="setProgressText">0 von 0 Sätzen</span>
-            </div>
-            <div class="barOuter"><div id="progressBar" class="barInner"></div></div>
-          </div>
-          <div class="nextBox">
-            <span class="miniLabel">Nächste Übung</span>
-            <b id="nextExercise">-</b>
-            <small id="nextLast">Letztes Gewicht: -</small>
-          </div>
-          <button id="startBtn" class="primary">Training starten</button>
         </div>
 
-        <div class="sectionHead">
+        <div class="sectionTitle">
           <h2>Übungen</h2>
-          <button id="collapseDone" class="chip">Erledigte ausblenden</button>
+          <button id="toggleDone" class="ghostBtn">Erledigte ausblenden</button>
         </div>
-        <div id="exerciseCards" class="exerciseList"></div>
+        <div id="exerciseList" class="exerciseList"></div>
       </section>
 
-      <section id="plan" class="screen">
+      <section id="screenPlan" class="screen">
         <div class="card">
-          <h2>Wochenplan</h2>
-          <p class="hint">Kompakter Plan für Fettverlust + Muskelaufbau mit Fokus auf Schulter, Rücken, obere Brust und Bauch.</p>
+          <p class="kicker">Wochenplan</p>
+          <h1>Dein Split</h1>
+          <p class="muted">Kompakter Plan für Fettverlust, Muskelaufbau, Schulterbreite, Rückenbreite und sichtbaren Bauch.</p>
           <div id="weekPlan" class="weekPlan"></div>
         </div>
+
+        <div class="card">
+          <p class="kicker">Priorität</p>
+          <h2>Fokus für deine Optik</h2>
+          <div class="priorityGrid">
+            <div><b>01</b><span>Seitliche Schulter</span></div>
+            <div><b>02</b><span>Lat / Rückenbreite</span></div>
+            <div><b>03</b><span>Obere Brust</span></div>
+            <div><b>04</b><span>Bauch + Fettverlust</span></div>
+          </div>
+        </div>
       </section>
 
-      <section id="stats" class="screen">
-        <div class="gridStats">
-          <div class="statCard"><span id="statWeek">0</span><small>Trainings diese Woche</small></div>
-          <div class="statCard"><span id="statSets">0</span><small>Sätze gesamt</small></div>
-          <div class="statCard"><span id="statVolume">0</span><small>kg Volumen</small></div>
-          <div class="statCard"><span id="statPR">0</span><small>PRs</small></div>
+      <section id="screenLibrary" class="screen">
+        <div class="card">
+          <p class="kicker">Übungsbibliothek</p>
+          <h1>Alle Übungen</h1>
+          <input id="librarySearch" class="search" placeholder="Übung suchen...">
+          <div class="filterRow">
+            <button class="filter active" data-filter="all">Alle</button>
+            <button class="filter" data-filter="Brust">Brust</button>
+            <button class="filter" data-filter="Rücken">Rücken</button>
+            <button class="filter" data-filter="Schulter">Schulter</button>
+            <button class="filter" data-filter="Bauch">Bauch</button>
+            <button class="filter" data-filter="Beine">Beine</button>
+          </div>
+          <div id="libraryList" class="libraryGrid"></div>
+        </div>
+      </section>
+
+      <section id="screenStats" class="screen">
+        <div class="statGrid">
+          <div class="statCard"><b id="statTrainings">0</b><span>Trainings diese Woche</span></div>
+          <div class="statCard"><b id="statSets">0</b><span>Sätze gesamt</span></div>
+          <div class="statCard"><b id="statVolume">0</b><span>Volumen</span></div>
+          <div class="statCard"><b id="statPRs">0</b><span>Übungs-PRs</span></div>
         </div>
 
         <div class="card">
-          <h2>Volumen nach Muskelgruppe</h2>
-          <div id="muscleVolume" class="volumeBars"></div>
+          <p class="kicker">Volumen</p>
+          <h2>Muskelgruppen</h2>
+          <div id="muscleBars" class="bars"></div>
         </div>
 
         <div class="card">
-          <h2>Bestleistungen</h2>
-          <div id="prList" class="list"></div>
+          <p class="kicker">Bestleistungen</p>
+          <h2>PRs</h2>
+          <div id="prList" class="logList"></div>
         </div>
 
         <div class="card">
-          <h2>Körpergewicht</h2>
-          <div class="two">
+          <p class="kicker">Körpergewicht</p>
+          <h2>Verlauf</h2>
+          <div class="twoCol">
             <input id="bodyDate" type="date">
             <input id="bodyWeight" type="number" step="0.1" placeholder="90.0 kg">
           </div>
           <button id="saveBody" class="secondary">Körpergewicht speichern</button>
-          <div id="bodyChart" class="chart"></div>
-          <div id="bodyList" class="list compact"></div>
+          <div id="bodyChart" class="miniChart"></div>
+          <div id="bodyList" class="logList compact"></div>
         </div>
       </section>
 
-      <section id="log" class="screen">
+      <section id="screenLog" class="screen">
         <div class="card">
-          <h2>Trainingslog</h2>
-          <input id="search" placeholder="Übung suchen">
-          <select id="filterWorkout"></select>
-          <div id="logList" class="list"></div>
+          <p class="kicker">Satzverlauf</p>
+          <h1>Logbuch</h1>
+          <input id="logSearch" class="search" placeholder="Übung suchen...">
+          <select id="logWorkoutFilter"></select>
+          <div id="logList" class="logList"></div>
         </div>
 
         <div class="card">
-          <h2>Backup</h2>
-          <button id="exportCsv" class="secondary">CSV exportieren</button>
+          <p class="kicker">Sichern</p>
+          <h2>Backup & Export</h2>
           <button id="exportJson" class="secondary">Backup erstellen</button>
-          <label class="fileBtn">Backup importieren
+          <label class="uploadBtn">Backup importieren
             <input id="importJson" type="file" accept="application/json">
           </label>
+          <button id="exportCsv" class="secondary">CSV exportieren</button>
           <button id="clearAll" class="danger">Alle Daten löschen</button>
         </div>
       </section>
     </main>
 
     <nav class="bottomNav">
-      <button class="navBtn active" data-screen="today">🏋️<span>Heute</span></button>
-      <button class="navBtn" data-screen="plan">📅<span>Plan</span></button>
-      <button class="navBtn" data-screen="stats">📈<span>Stats</span></button>
-      <button class="navBtn" data-screen="log">🧾<span>Log</span></button>
+      <button class="nav active" data-screen="screenToday"><span>⌂</span>Heute</button>
+      <button class="nav" data-screen="screenPlan"><span>▦</span>Plan</button>
+      <button class="nav" data-screen="screenLibrary"><span>◉</span>Übungen</button>
+      <button class="nav" data-screen="screenStats"><span>▥</span>Stats</button>
+      <button class="nav" data-screen="screenLog"><span>☰</span>Mehr</button>
     </nav>
   </div>
 
-  <div id="setModal" class="modal hidden">
+  <div id="exerciseModal" class="modal hidden">
     <div class="sheet">
       <div class="sheetHead">
         <div>
-          <p class="label" id="modalMuscle">Muskel</p>
-          <h2 id="modalExercise">Übung</h2>
+          <p class="kicker" id="modalMuscle">Muskel</p>
+          <h1 id="modalTitle">Übung</h1>
         </div>
-        <button id="closeModal" class="iconBtn">×</button>
+        <button id="closeExercise" class="iconBtn">×</button>
       </div>
 
-      <div id="demo" class="demo"></div>
-      <div class="tips">
-        <p><b>Zielmuskel:</b> <span id="targetMuscle"></span></p>
-        <p><b>Tipp:</b> <span id="techTip"></span></p>
-        <p><b>Fehler vermeiden:</b> <span id="avoidTip"></span></p>
+      <div id="modalHero" class="modalHero"></div>
+
+      <div class="detailTabs">
+        <button class="detailTab active" data-tab="overview">Überblick</button>
+        <button class="detailTab" data-tab="execution">Ausführung</button>
+        <button class="detailTab" data-tab="tips">Tipps</button>
       </div>
 
-      <div class="suggestion">
-        <span>Vorschlag heute</span>
-        <b id="suggestionText">-</b>
-        <small id="lastText">Letztes Training: -</small>
+      <div id="tabOverview" class="detailPanel active">
+        <div class="infoGrid">
+          <div><span>Sätze</span><b id="modalSets">-</b></div>
+          <div><span>Wdh.</span><b id="modalReps">-</b></div>
+          <div><span>Pause</span><b id="modalRest">-</b></div>
+          <div><span>Typ</span><b id="modalType">-</b></div>
+        </div>
+
+        <div class="suggestionBox">
+          <span>Vorschlag heute</span>
+          <b id="suggestionText">-</b>
+          <small id="lastTrainingText">Letztes Training: -</small>
+        </div>
       </div>
 
-      <div class="three">
+      <div id="tabExecution" class="detailPanel">
+        <ol id="executionSteps" class="steps"></ol>
+      </div>
+
+      <div id="tabTips" class="detailPanel">
+        <div class="tipBox green"><b>Tipp</b><p id="techTip"></p></div>
+        <div class="tipBox red"><b>Fehler vermeiden</b><p id="avoidTip"></p></div>
+      </div>
+
+      <button id="openSetModal" class="primary big">Satz eintragen</button>
+    </div>
+  </div>
+
+  <div id="setModal" class="modal hidden">
+    <div class="sheet smaller">
+      <div class="sheetHead">
+        <div>
+          <p class="kicker">Satz eintragen</p>
+          <h1 id="setTitle">Übung</h1>
+        </div>
+        <button id="closeSet" class="iconBtn">×</button>
+      </div>
+
+      <div class="threeCol">
         <div><label>Satz</label><input id="setNo" type="number" min="1"></div>
-        <div><label>kg</label><input id="weight" type="number" step="0.5" inputmode="decimal"></div>
-        <div><label>Wdh.</label><input id="reps" type="number" inputmode="numeric"></div>
+        <div><label>kg</label><input id="setWeight" type="number" step="0.5" inputmode="decimal"></div>
+        <div><label>Wdh.</label><input id="setReps" type="number" inputmode="numeric"></div>
       </div>
-      <input id="note" placeholder="Notiz, z.B. sauber oder schwer">
-
-      <div class="modalActions">
-        <button id="saveSet" class="primary">Speichern</button>
-        <button id="copyLast" class="secondary">Letzten kopieren</button>
-      </div>
+      <input id="setNote" placeholder="Notiz, z.B. sauber oder schwer">
+      <button id="saveSet" class="primary big">Speichern & Timer starten</button>
+      <button id="copyLast" class="secondary">Letzten Satz kopieren</button>
     </div>
   </div>
 
   <div id="editModal" class="modal hidden">
-    <div class="sheet">
+    <div class="sheet smaller">
       <div class="sheetHead">
-        <h2>Satz bearbeiten</h2>
+        <h1>Satz bearbeiten</h1>
         <button id="closeEdit" class="iconBtn">×</button>
       </div>
-      <div class="three">
+      <div class="threeCol">
         <div><label>Satz</label><input id="editSetNo" type="number"></div>
         <div><label>kg</label><input id="editWeight" type="number" step="0.5"></div>
         <div><label>Wdh.</label><input id="editReps" type="number"></div>
       </div>
       <input id="editNote" placeholder="Notiz">
-      <button id="saveEdit" class="primary">Änderung speichern</button>
+      <button id="saveEdit" class="primary big">Änderung speichern</button>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
