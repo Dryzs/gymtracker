@@ -8,221 +8,237 @@
   <meta name="apple-mobile-web-app-title" content="GymJournal">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=15">
   <title>GymJournal</title>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
+<div class="app">
+  <header class="topbar">
+    <div>
+      <div class="brand">GYM<span>JOURNAL</span></div>
+      <p>Dein Training. Dein Fortschritt. Dein Ziel.</p>
+    </div>
+  </header>
+
+  <main>
+    <section id="todayScreen" class="screen active">
+      <div class="dashboard">
+        <div class="dashHeader">
+          <div>
+            <p class="eyebrow">Heute</p>
+            <h1 id="todayWorkoutTitle">Training</h1>
+            <p id="todayMeta">Automatische Tagesauswahl</p>
+          </div>
+        </div>
+
+        <div class="nextExerciseBox">
+          <div>
+            <p>Nächste Übung</p>
+            <h2 id="nextExerciseName">Wird geladen...</h2>
+            <span id="nextExerciseInfo">Letztes Training: -</span>
+            <strong id="nextSuggestion">Vorschlag: -</strong>
+          </div>
+          <img id="nextExerciseImage" class="nextImage" alt="Übungsbild">
+        </div>
+
+        <div class="quickStats">
+          <div><b id="exerciseDone">0/0</b><span>Übungen</span></div>
+          <div><b id="setsDone">0/0</b><span>Sätze</span></div>
+          <div><b id="volumeToday">0 kg</b><span>Volumen</span></div>
+        </div>
+
+        <div class="progressLine bigProgress"><div id="mainProgress"></div></div>
+
+        <div class="actionRow">
+          <button id="startWorkout" class="primary">Training starten</button>
+          <button id="resetTodayPlan" class="secondary">Heute zurücksetzen</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cardHead">
+          <div>
+            <p class="eyebrow">Trainingstag</p>
+            <h2>Training auswählen</h2>
+          </div>
+          <select id="workoutSelect"></select>
+        </div>
+      </div>
+
+      <div class="sectionHead">
+        <h2>Heutige Übungen</h2>
+        <button id="toggleDone" class="smallBtn">Erledigte ausblenden</button>
+      </div>
+      <div id="exerciseList" class="exerciseList"></div>
+    </section>
+
+    <section id="planScreen" class="screen">
+      <div class="card">
+        <p class="eyebrow">Wochenplan</p>
+        <h1>Kompakter Split</h1>
+        <p class="muted">Tippe einen Trainingstag an, um nur die Übungen zu sehen. Keine Gewichte, keine Logs.</p>
+        <div id="weekPlan" class="weekPlan"></div>
+      </div>
+    </section>
+
+    <section id="libraryScreen" class="screen">
+      <div class="card">
+        <p class="eyebrow">Übungsbibliothek</p>
+        <h1>Viele Übungen & Alternativen</h1>
+        <input id="librarySearch" class="search" placeholder="Übung suchen...">
+        <div id="libraryFilters" class="filterRow"></div>
+        <div id="libraryList" class="libraryList"></div>
+      </div>
+    </section>
+
+    <section id="statsScreen" class="screen">
+      <div class="card">
+        <p class="eyebrow">Zeitraum</p>
+        <h1>Statistiken</h1>
+        <div class="modeRow">
+          <button class="modeBtn active" data-mode="day">Tag</button>
+          <button class="modeBtn" data-mode="month">Monat</button>
+          <button class="modeBtn" data-mode="all">All Time</button>
+        </div>
+      </div>
+
+      <div class="statGrid">
+        <div class="statCard"><b id="statWorkouts">0</b><span>Trainings</span></div>
+        <div class="statCard"><b id="statSets">0</b><span>Sätze</span></div>
+        <div class="statCard"><b id="statVolume">0</b><span>kg Volumen</span></div>
+        <div class="statCard"><b id="statPR">0</b><span>PRs</span></div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Muskelgruppen</p>
+        <h2>Volumenverteilung</h2>
+        <div id="muscleBars" class="bars"></div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Bestleistungen</p>
+        <h2>PRs</h2>
+        <div id="prList" class="list"></div>
+      </div>
+    </section>
+
+    <section id="logScreen" class="screen">
+      <div class="card">
+        <p class="eyebrow">Satzverlauf</p>
+        <h1>Logbuch</h1>
+        <input id="logSearch" class="search" placeholder="Übung suchen...">
+        <select id="logFilter"></select>
+        <div id="logList" class="list"></div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Backup</p>
+        <h2>Daten sichern</h2>
+        <button id="exportJson" class="secondary full">JSON-Backup erstellen</button>
+        <label class="uploadBtn">JSON-Backup importieren
+          <input id="importJson" type="file" accept="application/json">
+        </label>
+        <button id="exportCsv" class="secondary full">CSV exportieren</button>
+        <button id="clearAll" class="danger full">Alle Daten löschen</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottomNav">
+    <button class="nav active" data-screen="todayScreen">Heute</button>
+    <button class="nav" data-screen="planScreen">Plan</button>
+    <button class="nav" data-screen="libraryScreen">Übungen</button>
+    <button class="nav" data-screen="statsScreen">Stats</button>
+    <button class="nav" data-screen="logScreen">Log</button>
+  </nav>
+</div>
+
+<div id="exerciseModal" class="modal hidden">
+  <div class="sheet">
+    <div class="sheetHead">
       <div>
-        <div class="brand">GYM<span>JOURNAL</span></div>
-        <p>Dein Training. Dein Fortschritt. Dein Ziel.</p>
+        <p id="modalMuscle" class="eyebrow"></p>
+        <h1 id="modalTitle"></h1>
       </div>
-    </header>
-
-    <main>
-      <section id="todayScreen" class="screen active">
-        <div class="dashboard">
-          <div class="dashHeader">
-            <div>
-              <p class="eyebrow">Heute</p>
-              <h1 id="todayWorkoutTitle">Training</h1>
-              <p id="todayMeta">Automatische Tagesauswahl</p>
-            </div>
-          </div>
-
-          <div class="nextExerciseBox">
-            <div>
-              <p>Nächste Übung</p>
-              <h2 id="nextExerciseName">Wird geladen...</h2>
-              <span id="nextExerciseInfo">Letztes Training: -</span>
-              <strong id="nextSuggestion">Vorschlag: -</strong>
-            </div>
-            <img id="nextExerciseImage" class="nextImage" alt="Übungsbild">
-          </div>
-
-          <div class="quickStats">
-            <div><b id="exerciseDone">0/0</b><span>Übungen</span></div>
-            <div><b id="setsDone">0/0</b><span>Sätze</span></div>
-            <div><b id="volumeToday">0 kg</b><span>Volumen</span></div>
-          </div>
-
-          <div class="progressLine bigProgress"><div id="mainProgress"></div></div>
-
-          <div class="actionRow">
-            <button id="startWorkout" class="primary">Training starten</button>
-            <button id="finishWorkout" class="secondary">Abschließen</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="cardHead">
-            <div>
-              <p class="eyebrow">Trainingstag</p>
-              <h2>Training auswählen</h2>
-            </div>
-            <select id="workoutSelect"></select>
-          </div>
-        </div>
-
-        <div class="sectionHead">
-          <h2>Heutige Übungen</h2>
-          <button id="toggleDone" class="smallBtn">Erledigte ausblenden</button>
-        </div>
-        <div id="exerciseList" class="exerciseList"></div>
-      </section>
-
-      <section id="planScreen" class="screen">
-        <div class="card">
-          <p class="eyebrow">Wochenplan</p>
-          <h1>Kompakter Split</h1>
-          <p class="muted">Dips und Deadlifts sind optional, damit der Plan im Gym übersichtlich bleibt.</p>
-          <div id="weekPlan" class="weekPlan"></div>
-        </div>
-      </section>
-
-      <section id="libraryScreen" class="screen">
-        <div class="card">
-          <p class="eyebrow">Übungsbibliothek</p>
-          <h1>Übungen & Geräte</h1>
-          <input id="librarySearch" class="search" placeholder="Übung suchen...">
-          <div class="filterRow">
-            <button class="filter active" data-filter="all">Alle</button>
-            <button class="filter" data-filter="Brust">Brust</button>
-            <button class="filter" data-filter="Rücken">Rücken</button>
-            <button class="filter" data-filter="Schulter">Schulter</button>
-            <button class="filter" data-filter="Arme">Arme</button>
-            <button class="filter" data-filter="Beine">Beine</button>
-            <button class="filter" data-filter="Bauch">Bauch</button>
-          </div>
-          <div id="libraryList" class="libraryList"></div>
-        </div>
-      </section>
-
-      <section id="statsScreen" class="screen">
-        <div class="statGrid">
-          <div class="statCard"><b id="statWorkouts">0</b><span>Trainings/Woche</span></div>
-          <div class="statCard"><b id="statSets">0</b><span>Sätze gesamt</span></div>
-          <div class="statCard"><b id="statVolume">0</b><span>kg Volumen</span></div>
-          <div class="statCard"><b id="statPR">0</b><span>PRs</span></div>
-        </div>
-
-        <div class="card">
-          <p class="eyebrow">Muskelgruppen</p>
-          <h2>Volumenverteilung</h2>
-          <div id="muscleBars" class="bars"></div>
-        </div>
-
-        <div class="card">
-          <p class="eyebrow">Bestleistungen</p>
-          <h2>PRs</h2>
-          <div id="prList" class="list"></div>
-        </div>
-      </section>
-
-      <section id="logScreen" class="screen">
-        <div class="card">
-          <p class="eyebrow">Satzverlauf</p>
-          <h1>Logbuch</h1>
-          <input id="logSearch" class="search" placeholder="Übung suchen...">
-          <select id="logFilter"></select>
-          <div id="logList" class="list"></div>
-        </div>
-
-        <div class="card">
-          <p class="eyebrow">Backup</p>
-          <h2>Daten sichern</h2>
-          <button id="exportJson" class="secondary full">JSON-Backup erstellen</button>
-          <label class="uploadBtn">JSON-Backup importieren
-            <input id="importJson" type="file" accept="application/json">
-          </label>
-          <button id="exportCsv" class="secondary full">CSV exportieren</button>
-          <button id="clearAll" class="danger full">Alle Daten löschen</button>
-        </div>
-      </section>
-    </main>
-
-    <nav class="bottomNav">
-      <button class="nav active" data-screen="todayScreen">Heute</button>
-      <button class="nav" data-screen="planScreen">Plan</button>
-      <button class="nav" data-screen="libraryScreen">Übungen</button>
-      <button class="nav" data-screen="statsScreen">Stats</button>
-      <button class="nav" data-screen="logScreen">Log</button>
-    </nav>
-  </div>
-
-  <div id="exerciseModal" class="modal hidden">
-    <div class="sheet">
-      <div class="sheetHead">
-        <div>
-          <p id="modalMuscle" class="eyebrow"></p>
-          <h1 id="modalTitle"></h1>
-        </div>
-        <button id="closeExerciseModal" class="iconBtn">×</button>
-      </div>
-
-      <img id="exerciseVisual" class="exerciseVisual" alt="Übungsbild">
-
-      <div class="infoGrid">
-        <div><span>Sätze</span><b id="modalSets"></b></div>
-        <div><span>Wdh.</span><b id="modalReps"></b></div>
-        <div><span>Pause</span><b id="modalRest"></b></div>
-        <div><span>Typ</span><b id="modalType"></b></div>
-      </div>
-
-      <div class="suggestionBox">
-        <span>Vorschlag heute</span>
-        <b id="modalSuggestion"></b>
-        <small id="modalLast"></small>
-      </div>
-
-      <div class="tipBox neutral"><b>Beschreibung</b><p id="modalDescription"></p></div>
-
-      <div class="tipBox good"><b>Ausführung</b><ol id="executionSteps"></ol></div>
-      <div class="tipBox good"><b>Technik-Tipp</b><p id="modalTip"></p></div>
-      <div class="tipBox bad"><b>Fehler vermeiden</b><p id="modalAvoid"></p></div>
-
-      <button id="openSetModal" class="primary full">Satz eintragen</button>
+      <button id="closeExerciseModal" class="iconBtn">×</button>
     </div>
-  </div>
 
-  <div id="setModal" class="modal hidden">
-    <div class="sheet smallSheet">
-      <div class="sheetHead">
-        <div>
-          <p class="eyebrow">Satz eintragen</p>
-          <h1 id="setExerciseTitle"></h1>
-        </div>
-        <button id="closeSetModal" class="iconBtn">×</button>
-      </div>
+    <img id="exerciseVisual" class="exerciseVisual" alt="Übungsbild">
 
-      <div class="threeCol">
-        <div><label>Satz</label><input id="setNo" type="number"></div>
-        <div><label>kg</label><input id="setWeight" type="number" step="0.5"></div>
-        <div><label>Wdh.</label><input id="setReps" type="number"></div>
-      </div>
-      <input id="setNote" placeholder="Notiz">
-      <button id="saveSet" class="primary full">Speichern</button>
-      <button id="copyLastSet" class="secondary full">Letzten Satz kopieren</button>
+    <div class="infoGrid">
+      <div><span>Sätze</span><b id="modalSets"></b></div>
+      <div><span>Wdh.</span><b id="modalReps"></b></div>
+      <div><span>Pause</span><b id="modalRest"></b></div>
+      <div><span>Typ</span><b id="modalType"></b></div>
     </div>
-  </div>
 
-  <div id="editModal" class="modal hidden">
-    <div class="sheet smallSheet">
-      <div class="sheetHead">
-        <h1>Satz bearbeiten</h1>
-        <button id="closeEditModal" class="iconBtn">×</button>
-      </div>
-      <div class="threeCol">
-        <div><label>Satz</label><input id="editSetNo" type="number"></div>
-        <div><label>kg</label><input id="editWeight" type="number" step="0.5"></div>
-        <div><label>Wdh.</label><input id="editReps" type="number"></div>
-      </div>
-      <input id="editNote" placeholder="Notiz">
-      <button id="saveEdit" class="primary full">Änderung speichern</button>
+    <div class="suggestionBox">
+      <span>Vorschlag heute</span>
+      <b id="modalSuggestion"></b>
+      <small id="modalLast"></small>
     </div>
-  </div>
 
-  <script src="app.js?v=14"></script>
+    <div class="tipBox neutral"><b>Beschreibung</b><p id="modalDescription"></p></div>
+    <div class="tipBox good"><b>Ausführung</b><ol id="executionSteps"></ol></div>
+    <div class="tipBox good"><b>Technik-Tipp</b><p id="modalTip"></p></div>
+    <div class="tipBox bad"><b>Fehler vermeiden</b><p id="modalAvoid"></p></div>
+
+    <button id="openSetModal" class="primary full">Satz eintragen</button>
+  </div>
+</div>
+
+<div id="setModal" class="modal hidden">
+  <div class="sheet smallSheet">
+    <div class="sheetHead">
+      <div>
+        <p class="eyebrow">Satz eintragen</p>
+        <h1 id="setExerciseTitle"></h1>
+      </div>
+      <button id="closeSetModal" class="iconBtn">×</button>
+    </div>
+
+    <div class="threeCol">
+      <div><label>Satz</label><input id="setNo" type="number"></div>
+      <div><label>kg</label><input id="setWeight" type="number" step="0.5"></div>
+      <div><label>Wdh.</label><input id="setReps" type="number"></div>
+    </div>
+    <input id="setNote" placeholder="Notiz">
+    <button id="saveSet" class="primary full">Speichern</button>
+    <button id="copyLastSet" class="secondary full">Letzten Satz kopieren</button>
+  </div>
+</div>
+
+<div id="editModal" class="modal hidden">
+  <div class="sheet smallSheet">
+    <div class="sheetHead">
+      <h1>Satz bearbeiten</h1>
+      <button id="closeEditModal" class="iconBtn">×</button>
+    </div>
+    <div class="threeCol">
+      <div><label>Satz</label><input id="editSetNo" type="number"></div>
+      <div><label>kg</label><input id="editWeight" type="number" step="0.5"></div>
+      <div><label>Wdh.</label><input id="editReps" type="number"></div>
+    </div>
+    <input id="editNote" placeholder="Notiz">
+    <button id="saveEdit" class="primary full">Änderung speichern</button>
+  </div>
+</div>
+
+<div id="replaceModal" class="modal hidden">
+  <div class="sheet">
+    <div class="sheetHead">
+      <div>
+        <p class="eyebrow">Übung ersetzen</p>
+        <h1 id="replaceTitle">Alternative wählen</h1>
+      </div>
+      <button id="closeReplaceModal" class="iconBtn">×</button>
+    </div>
+    <input id="replaceSearch" class="search" placeholder="Alternative suchen...">
+    <div id="replaceFilters" class="filterRow"></div>
+    <div id="replaceList" class="libraryList"></div>
+  </div>
+</div>
+
+<script src="app.js?v=15"></script>
 </body>
 </html>

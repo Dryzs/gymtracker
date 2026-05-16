@@ -4,3 +4,14 @@
 .tipBox p,.tipBox ol{margin:10px 0 0}
 .libraryItem{align-items:flex-start}
 .libraryItem img{object-fit:cover;background:#111}
+
+/* v15 additions */
+.exerciseActions{grid-template-columns:1fr 1fr 1fr!important}
+.replaceAction{background:#242b39;color:#fff}
+.setList{display:grid;gap:7px;margin-top:10px}.setItem{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#121826;border:1px solid var(--line);border-radius:14px;padding:9px}.setItem b{font-size:13px}.setButtons{display:flex;gap:6px}.setButtons button{border:0;border-radius:10px;padding:7px 8px;font-size:12px;font-weight:900}.editBtn,.copyBtn{background:#242b39;color:#fff}.deleteBtn{background:#3c1519;color:#ffb5b5}
+.weekHeader{display:flex;justify-content:space-between;align-items:center;gap:10px}.weekHeader b{font-size:17px}.weekToggle{color:var(--red2);font-weight:1000}.weekExercises{margin:12px 0 0;padding-left:20px;color:#dce2ee;line-height:1.8}
+.modeRow{display:flex;gap:8px;overflow:auto;margin:12px 0}.modeBtn{border:1px solid var(--line);background:#111722;color:#cfd6e8;border-radius:999px;padding:9px 12px;font-weight:900;white-space:nowrap}.modeBtn.active{background:var(--red);color:#fff;border-color:var(--red)}
+.filterRow{display:flex;gap:8px;overflow:auto;margin:12px 0}
+.exerciseDescription{color:var(--muted);font-size:14px;line-height:1.45;margin-top:6px}.tipBox.neutral{background:rgba(255,255,255,.03);border:1px solid var(--line)}
+.libraryItem{align-items:flex-start}
+@media(max-width:620px){.exerciseActions{grid-template-columns:1fr!important}.setItem{align-items:flex-start;flex-direction:column}.setButtons{width:100%}.setButtons button{flex:1}}

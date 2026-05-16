@@ -1,728 +1,130 @@
-const TRAIN_KEY = "gymjournal_sets_v14";
-const OLD_KEYS = [
-  "gymjournal_sets_v13",
-  "gymjournal_sets_v12",
-  "gymjournal_sets_v11",
-  "gymjournal_sets_v10",
-  "gymjournal_sets_v9",
-  "gymjournal_sets_v8",
-  "gymjournal_sets_v7",
-  "gymjournal_sets_v6",
-  "gymjournal_sets_v5",
-  "gymjournal_sets_v4",
-  "gymjournal_sets_v3",
-  "gymjournal_training_v2"
-];
+const TRAIN_KEY = "gymjournal_sets_v15";
+const OVERRIDE_KEY = "gymjournal_overrides_v15";
+const OLD_KEYS = ["gymjournal_sets_v14","gymjournal_sets_v13","gymjournal_sets_v12","gymjournal_sets_v11","gymjournal_sets_v10","gymjournal_sets_v9","gymjournal_sets_v8","gymjournal_sets_v7"];
 
-const EXERCISE_DESCRIPTIONS = {
-  "Bankdrücken Maschine": "Geführte Brustpresse für Brust, vordere Schulter und Trizeps. Ideal für schweren Push-Start, weil du stabil drücken und dich gut auf progressive Steigerung konzentrieren kannst.",
-  "Schrägbankdrücken": "Drückübung mit schräger Bank für die obere Brust. Unterstützt einen volleren oberen Brustbereich und ergänzt das flache Drücken perfekt.",
-  "Schulterdrücken Maschine": "Geführte Druckbewegung über Kopf für vordere und seitliche Schulter. Gut, um Schulterkraft sicher und kontrolliert aufzubauen.",
-  "Butterfly": "Isolationsübung für die Brust, bei der die Arme in einer bogenförmigen Bewegung vor dem Körper zusammengeführt werden. Starker Fokus auf Kontraktion und Dehnung.",
-  "Seitheben": "Klassische Schulter-Isolationsübung für die seitliche Schulter. Wichtig für mehr Schulterbreite und eine stärkere V-Form.",
-  "Überkopf Trizepsstrecken": "Trizepsübung mit viel Dehnung über Kopf. Trifft besonders den langen Trizepskopf und ergänzt Pushdowns sehr gut.",
-  "Kabel Pushdowns": "Kabelübung für den Trizeps mit stabilen Ellbogen und klarer Streckbewegung nach unten. Sehr gut für saubere Wiederholungen und Pump.",
-  "Kabel Crunches": "Bauchübung am Kabelturm, bei der du den Oberkörper aktiv einrollst. Ideal für belastbares Bauchtraining mit sauberer Progression.",
-  "Dips optional": "Körpergewichtsübung für Brust und Trizeps. Im Plan optional, weil sie stark fordernd ist und nur schmerzfrei ausgeführt werden sollte.",
-  "Latziehen eng": "Vertikale Zugübung für den Latissimus mit engem Griff. Hilft dabei, Rückenbreite aufzubauen und den Ellbogen sauber Richtung Hüfte zu führen.",
-  "Chest Supported Row": "Ruderübung mit Brustpolster für den oberen Rücken. Durch die Auflage wird Schwung reduziert und der Rücken gezielter belastet.",
-  "Rudern eng": "Horizontale Zugübung für Rückenmitte und Lat. Gut für Rückendicke und sauberes Zurückziehen der Schulterblätter.",
-  "Face Pulls": "Zugübung für hintere Schulter, oberen Rücken und Rotatorenmanschette. Sehr gut für Haltung, Schultergesundheit und Ausgleich zu viel Drücken.",
-  "Normale Curls": "Klassische Bizepsübung mit engem Fokus auf Beugung im Ellbogen. Einfach, effektiv und gut progressiv steigerbar.",
-  "Hammercurls": "Curl-Variante mit neutralem Griff für Bizeps und Unterarme. Unterstützt Armumfang und Griffkraft.",
-  "Hanging Knee Raises": "Bauchübung hängend an Stange oder Dip-Station. Trainiert vor allem unteren Bauchbereich und Hüftbeuger bei sauberem Einrollen.",
-  "Deadlift optional": "Schwere Ganzkörper-Zugübung für Rückenstrecker, Gluteus und Beinrückseite. Im Plan bewusst nur optional, damit dein Pull-Tag nicht zu lang wird.",
-  "Beinpresse": "Geführte Beinübung für Quadrizeps, Gluteus und je nach Fußstellung auch Beinbeuger. Besonders praktisch, wenn du kontrolliert und knieschonend arbeiten willst.",
-  "Romanian Deadlift": "Hüftdominante Übung für Beinbeuger und Gesäß. Dabei bleibt der Rücken neutral, während die Hüfte nach hinten geschoben wird.",
-  "Beinbeuger": "Maschinenübung für die hintere Oberschenkelmuskulatur. Gut, um Beinbeuger gezielt zu stärken und das Knie zu stabilisieren.",
-  "Beinstrecker leicht": "Leichte Isolationsübung für den Quadrizeps. Im Plan bewusst moderat gehalten, damit das Knie geschont wird.",
-  "Wadenheben": "Isolationsübung für die Wadenmuskulatur. Langsame Wiederholungen mit voller Dehnung und starker Kontraktion oben sind hier entscheidend.",
-  "Leg Raises": "Bauchübung zum Anheben der Beine oder Knie. Trainiert vor allem die vordere Bauchmuskulatur, wenn du ohne Schwung arbeitest.",
-  "Steigung Laufband": "Cardio-Einheit auf dem Laufband mit erhöhter Steigung. Gut für Fettverlust, zusätzliche Kalorienverbrennung und Grundlagenausdauer.",
-  "Chest Press": "Maschinenvariante des Brustdrückens mit stabiler Führung. Eignet sich sehr gut für kontrolliertes Pump-Training der Brust.",
-  "Reverse Butterfly": "Isolationsübung für hintere Schulter und oberen Rücken. Hilft bei aufrechter Haltung und gleicht viel Brusttraining aus.",
-  "Pushdowns": "Trizepsübung am Kabelzug mit Fokus auf kontrollierte Streckung. Ideal für einen sauberen Pump am Ende des Push-Trainings.",
-  "Latziehen breit": "Breiter vertikaler Zug für Rückenbreite und oberen Lat. Der Fokus liegt auf einer kontrollierten Zugbewegung zur oberen Brust.",
-  "Rudern breit": "Horizontale Zugübung mit breiterem Griff für oberen Rücken, hintere Schulter und Trapez. Perfekt für mehr Rückendicke und Haltung."
+function ex(name, sets, reps, muscle, group, img, type, description, tip, avoid, steps, rest, opt = false) {
+  return { name, sets, reps, muscle, group, img, type, description, tip, avoid, steps, rest, opt };
+}
+function simple(name, muscle, group, img, type = "Alternative") {
+  return ex(name, 3, "8–12", muscle, group, img, type, `${name} ist eine Alternative für ${muscle}. Nutze sie, wenn ein Gerät besetzt ist oder du die Belastung variieren willst.`, "Sauber und kontrolliert ausführen.", "Kein Schwung und kein Gewicht erzwingen.", ["Gerät/Position sauber einstellen.", "Kontrolliert bewegen.", "Langsam in die Ausgangsposition zurück."], 90);
+}
+
+const PLAN = {
+push1:{title:"Push schwer + Bizeps",day:"Montag",ex:[
+ex("Bankdrücken Maschine",4,"6–10","Brust","Brust","bench","Grundübung","Geführte Brustpresse für Brust, vordere Schulter und Trizeps. Ideal als schwere Startübung.","Schulterblätter hinten unten halten.","Nicht ins Hohlkreuz fallen.",["Sitzhöhe: Griffe auf Brusthöhe.","Schulterblätter hinten unten halten.","Kontrolliert drücken und langsam zurück."],150),
+ex("Schrägbankdrücken",3,"8–12","Obere Brust","Brust","incline","Grundübung","Drückübung für die obere Brust. Unterstützt einen volleren oberen Brustbereich.","Fokus obere Brust.","Bank nicht zu steil einstellen.",["Bank leicht schräg.","Zur oberen Brust führen.","Sauber hochdrücken."],120),
+ex("Schulterdrücken Maschine",3,"8–12","Schulter","Schulter","shoulderpress","Maschine","Geführte Druckbewegung über Kopf für vordere und seitliche Schulter.","Rumpf fest halten.","Nicht ins Hohlkreuz.",["Sitz einstellen.","Griffe auf Schulterhöhe.","Kontrolliert drücken."],120),
+ex("Butterfly",3,"12–15","Brust","Brust","butterfly","Maschine","Isolationsübung für die Brust mit starker Kontraktion vorne.","Vorne bewusst zusammendrücken.","Nicht reißen.",["Sitzhöhe einstellen.","Arme leicht gebeugt.","Schließen und langsam öffnen."],90),
+ex("Seitheben",4,"12–15","Seitliche Schulter","Schulter","lateral","Isolation","Isolationsübung für die seitliche Schulter und mehr Schulterbreite.","Ellbogen führen die Bewegung.","Nicht mit Schwung.",["Leicht vorlehnen.","Seitlich heben.","Langsam ablassen."],75),
+ex("Normale Curls",3,"8–12","Bizeps","Arme","curl","Isolation","Klassische Bizepsübung mit Fokus auf Beugung im Ellbogen.","Oberarm ruhig halten.","Nicht mit Rücken schwingen.",["Hantel kontrolliert.","Hochcurlen.","Langsam ablassen."],75),
+ex("Hammercurls",3,"10–12","Bizeps/Unterarm","Arme","curl","Isolation","Curl-Variante mit neutralem Griff für Bizeps und Unterarme.","Neutraler Griff.","Nicht werfen.",["Daumen nach oben.","Hochcurlen.","Langsam runter."],75),
+ex("Kabel Crunches",4,"12–15","Bauch","Bauch","cablecrunch","Bauch","Bauchübung am Kabelturm mit sauberer Progression.","Rücken rund machen.","Nicht nur mit Armen ziehen.",["Seil greifen.","Oberkörper einrollen.","Langsam zurück."],60)]},
+pull1:{title:"Pull schwer + Trizeps",day:"Dienstag",ex:[
+ex("Latziehen eng",4,"8–12","Lat","Rücken","latpulldown","Maschine","Vertikale Zugübung für Rückenbreite und Lat.","Ellbogen Richtung Hüfte ziehen.","Nicht zu weit zurücklehnen.",["Brust hoch.","Eng greifen.","Zur oberen Brust ziehen."],120),
+ex("Chest Supported Row",3,"10–12","Oberer Rücken","Rücken","chestrow","Maschine","Ruderübung mit Brustpolster für oberen Rücken ohne Schwung.","Brust bleibt am Polster.","Nicht abheben.",["Brust ans Polster.","Richtung Körper ziehen.","Langsam zurück."],90),
+ex("Rudern eng",4,"8–12","Rückenmitte","Rücken","seatedrow","Maschine","Horizontale Zugübung für Rückenmitte und Lat.","Schulterblätter zurückziehen.","Nicht mit Schwung.",["Brust hoch.","Zum Bauch ziehen.","Kontrolliert zurück."],120),
+ex("Face Pulls",3,"15","Hintere Schulter","Schulter","facepull","Isolation","Übung für hintere Schulter, Haltung und Schultergesundheit.","Seil Richtung Gesicht.","Nicht zu schwer.",["Seil Gesichtshöhe.","Zum Gesicht ziehen.","Ellbogen hoch."],75),
+ex("Kabel Pushdowns",3,"10–12","Trizeps","Arme","pushdown","Isolation","Kabelübung für den Trizeps mit klarer Streckbewegung nach unten.","Ellbogen am Körper fixieren.","Nicht mit Oberkörper drücken.",["Gerade stehen.","Ellbogen fixieren.","Nach unten drücken."],75),
+ex("Überkopf Trizepsstrecken",3,"10–12","Trizeps","Arme","overheadtri","Isolation","Trizepsübung mit viel Dehnung über Kopf.","Dehnung im Trizeps.","Ellbogen nicht zu weit öffnen.",["Über Kopf starten.","Unterarme beugen.","Arme strecken."],75),
+ex("Hanging Knee Raises",3,"12–15","Bauch","Bauch","legraise","Bauch","Bauchübung hängend mit Fokus auf Einrollen des Beckens.","Becken einrollen.","Nicht schwingen.",["Stabil hängen.","Knie hochziehen.","Langsam ablassen."],60)]},
+legs:{title:"Beine + Bauch",day:"Mittwoch",ex:[
+ex("Seated Leg Press",4,"8–12","Beine","Beine","legpress","Maschine","Sitzende Beinpresse für Quadrizeps, Gluteus und Beinmuskulatur. Kontrolliert und knieschonend ausführbar.","Kontrollierte Tiefe.","Nicht schmerzhaft tief.",["Füße stabil.","Langsam ablassen.","Kontrolliert drücken."],120),
+ex("Leg Curl",3,"10–15","Beinbeuger","Beine","legcurl","Maschine","Maschinenübung für die hintere Oberschenkelmuskulatur.","Langsam ablassen.","Nicht abfedern.",["Polster einstellen.","Fersen zum Gesäß.","Langsam strecken."],90),
+ex("Romanian Deadlift",3,"8–10","Beinbeuger/Gluteus","Beine","rdl","Grundübung","Hüftdominante Übung für Beinbeuger, Gluteus und unteren Rücken.","Hüfte nach hinten.","Rücken nicht rund.",["Knie leicht gebeugt.","Hüfte zurück.","Dehnung spüren."],150),
+ex("Beinstrecker",2,"12–15","Quadrizeps","Beine","legextension","Maschine","Leichte Isolationsübung für den Quadrizeps. Bei Meniskus vorsichtig dosieren.","Nur schmerzfrei.","Nicht ruckartig.",["Sitz einstellen.","Strecken.","Langsam ablassen."],75),
+ex("Hip Abduction",3,"12–20","Gluteus / Hüfte außen","Beine","hipabduction","Maschine","Trainiert seitlichen Po und Hüftstabilität. Gut für Kniekontrolle und Stabilität.","Langsam nach außen drücken.","Kein Schwung.",["Sitz einstellen.","Knie nach außen drücken.","Kontrolliert zurück."],75),
+ex("Hip Adduction",3,"12–20","Innenschenkel","Beine","hipadduction","Maschine","Trainiert die Innenschenkel und verbessert die Balance der Beinmuskulatur.","Langsam zusammenführen.","Nicht ruckartig schließen.",["Sitz einstellen.","Beine zusammenführen.","Kontrolliert öffnen."],75),
+ex("Standing Calf Raises",4,"12–20","Waden","Beine","calf","Isolation","Wadenübung im Stehen mit Fokus auf volle Dehnung und Kontraktion.","Oben kurz halten.","Nicht federn.",["Ballen auf Plattform.","Fersen senken.","Hochdrücken."],60),
+ex("Kabel Crunches schwer",4,"12","Bauch","Bauch","cablecrunch","Bauch","Schwere Kabel-Crunches für progressive Bauchbelastung.","Sauber einrollen.","Nicht mit Armen ziehen.",["Seil greifen.","Einrollen.","Zurück."],60),
+ex("Leg Raises",3,"15","Bauch","Bauch","legraise","Bauch","Bauchübung zum Anheben der Beine oder Knie.","Kontrolliert.","Kein Schwung.",["Rücken stabil.","Beine anheben.","Langsam ablassen."],60)]},
+rest:{title:"Pause",day:"Donnerstag/Sonntag",ex:[]},
+push2:{title:"Push Pump + Bizeps",day:"Freitag",ex:[
+ex("Schrägbankdrücken",4,"10–12","Obere Brust","Brust","incline","Maschine","Pump-orientierte Drückübung für die obere Brust.","Obere Brust priorisieren.","Nicht zu steil.",["Bank schräg.","Drücken.","Zurück."],120),
+ex("Chest Press",3,"12","Brust","Brust","bench","Maschine","Maschinenvariante des Brustdrückens für kontrolliertes Volumen.","Kontrolliert drücken.","Schultern nicht vorne.",["Sitz einstellen.","Drücken.","Zurück."],90),
+ex("Butterfly",3,"15","Brust","Brust","butterfly","Maschine","Brust-Isolation für Dehnung und Kontraktion.","Langsam.","Nicht reißen.",["Dehnen.","Schließen.","Kurz halten."],90),
+ex("Seitheben",5,"15","Seitliche Schulter","Schulter","lateral","Isolation","Volumenübung für breite Schultern.","Breite Schulter.","Kein Schwung.",["Leicht beugen.","Heben.","Ablassen."],75),
+ex("Reverse Butterfly",4,"15","Hintere Schulter","Schulter","reversefly","Isolation","Isolationsübung für hintere Schulter und oberen Rücken.","Hintere Schulter.","Nacken nicht übernehmen lassen.",["Brust ans Polster.","Nach außen ziehen.","Zurück."],75),
+ex("Normale Curls",3,"10","Bizeps","Arme","curl","Isolation","Bizepsübung am Push-Tag, damit der Bizeps frischer trainiert wird.","Sauber.","Nicht schwingen.",["Stehen.","Curlen.","Ablassen."],75),
+ex("Bayesian Curls",3,"12","Bizeps","Arme","curl","Isolation","Kabelcurl mit Arm leicht hinter dem Körper für starke Dehnung.","Volle Dehnung zulassen.","Schulter nicht nach vorne ziehen.",["Kabel hinter dem Körper.","Curlen.","Langsam dehnen."],75),
+ex("Kabel Crunches",4,"15","Bauch","Bauch","cablecrunch","Bauch","Bauchübung am Kabelzug für Pump und Kontrolle.","Kontraktion.","Nicht Arme.",["Seil greifen.","Einrollen.","Zurück."],60)]},
+pull2:{title:"Pull + Trizeps + Bauch/Cardio",day:"Samstag",ex:[
+ex("Latziehen breit",4,"10","Lat","Rücken","latpulldown","Maschine","Breiter vertikaler Zug für Rückenbreite.","Ellbogen runter.","Nicht Nacken.",["Breit greifen.","Zur Brust.","Hoch."],120),
+ex("Rudern eng",4,"10","Rückenmitte","Rücken","seatedrow","Maschine","Kontrollierte Ruderbewegung für Rückenmitte.","Kontrolliert.","Kein Schwung.",["Brust hoch.","Ziehen.","Zurück."],120),
+ex("Rudern breit",3,"12","Oberer Rücken","Rücken","chestrow","Maschine","Breiteres Rudern für oberen Rücken und hintere Schulter.","Ellbogen außen.","Schultern nicht hoch.",["Breit greifen.","Rudern.","Zurück."],90),
+ex("Face Pulls",4,"15","Hintere Schulter","Schulter","facepull","Isolation","Zugübung für Haltung und hintere Schulter.","Haltung.","Nicht zu schwer.",["Seil Gesichtshöhe.","Ziehen.","Außenrotieren."],75),
+ex("Kabel Pushdowns",3,"12","Trizeps","Arme","pushdown","Isolation","Trizepsübung am Pull-Tag, damit der Trizeps frischer isoliert wird.","Ellbogen stabil.","Nicht Schulter.",["Ellbogen fix.","Runter.","Hoch."],75),
+ex("Überkopf Trizepsstrecken",3,"12","Trizeps","Arme","overheadtri","Isolation","Trizepsübung mit Dehnung über Kopf.","Langer Trizepskopf.","Nicht reißen.",["Über Kopf.","Beugen.","Strecken."],75),
+ex("Kabel Crunches",4,"12","Bauch","Bauch","cablecrunch","Bauch","Schwere Bauchübung am Kabelzug.","Schwer sauber.","Nicht Arme.",["Seil.","Einrollen.","Zurück."],60),
+ex("Steigung Laufband",1,"30 min","Cardio","Cardio","treadmill","Cardio","Cardio-Einheit für Fettverlust und Grundlagenausdauer.","Gehen.","Nicht sprinten.",["Steigung.","Gehen.","Konstant."],60)]}
 };
 
-function ex(name, sets, reps, muscle, group, img, type, tip, avoid, steps, rest, opt = false) {
-  return { name, sets, reps, muscle, group, img, type, description: EXERCISE_DESCRIPTIONS[name] || "Keine Beschreibung vorhanden.", tip, avoid, steps, rest, opt };
-}
-
-const workouts = {
-  push1: {
-    title: "Push schwer",
-    day: "Montag",
-    ex: [
-      ex("Bankdrücken Maschine", 4, "6–10", "Brust", "Brust", "bench", "Grundübung", "Schulterblätter hinten unten halten.", "Nicht ins Hohlkreuz fallen.", ["Sitzhöhe: Griffe auf Brusthöhe.", "Schulterblätter hinten unten halten.", "Kontrolliert drücken und langsam zurück."], 150),
-      ex("Schrägbankdrücken", 3, "8–12", "Obere Brust", "Brust", "incline", "Grundübung", "Fokus obere Brust.", "Bank nicht zu steil einstellen.", ["Bank leicht schräg.", "Zur oberen Brust führen.", "Sauber hochdrücken."], 120),
-      ex("Schulterdrücken Maschine", 3, "8–12", "Schulter", "Schulter", "shoulderpress", "Maschine", "Rumpf fest halten.", "Nicht ins Hohlkreuz.", ["Sitz einstellen.", "Griffe auf Schulterhöhe.", "Kontrolliert drücken."], 120),
-      ex("Butterfly", 3, "12–15", "Brust", "Brust", "butterfly", "Maschine", "Vorne bewusst zusammendrücken.", "Nicht reißen.", ["Sitzhöhe einstellen.", "Arme leicht gebeugt.", "Schließen und langsam öffnen."], 90),
-      ex("Seitheben", 4, "12–15", "Seitliche Schulter", "Schulter", "lateral", "Isolation", "Ellbogen führen die Bewegung.", "Nicht mit Schwung.", ["Leicht vorlehnen.", "Seitlich heben.", "Langsam ablassen."], 75),
-      ex("Überkopf Trizepsstrecken", 3, "10–12", "Trizeps", "Arme", "overheadtri", "Isolation", "Dehnung im Trizeps.", "Ellbogen nicht zu weit öffnen.", ["Über Kopf starten.", "Unterarme beugen.", "Arme strecken."], 75),
-      ex("Kabel Pushdowns", 3, "10–12", "Trizeps", "Arme", "pushdown", "Isolation", "Ellbogen am Körper fixieren.", "Nicht mit Oberkörper drücken.", ["Gerade stehen.", "Ellbogen fixieren.", "Nach unten drücken."], 75),
-      ex("Kabel Crunches", 4, "12–15", "Bauch", "Bauch", "cablecrunch", "Bauch", "Rücken rund machen.", "Nicht nur mit Armen ziehen.", ["Seil greifen.", "Oberkörper einrollen.", "Langsam zurück."], 60),
-      ex("Dips optional", 2, "sauber", "Brust/Trizeps", "Brust", "dips", "Optional", "Nur wenn Schulter gut ist.", "Keine Schmerzen erzwingen.", ["Griffe halten.", "Kontrolliert runter.", "Sauber hoch."], 120, true)
-    ]
-  },
-  pull1: {
-    title: "Pull schwer",
-    day: "Dienstag",
-    ex: [
-      ex("Latziehen eng", 4, "8–12", "Lat", "Rücken", "latpulldown", "Maschine", "Ellbogen Richtung Hüfte ziehen.", "Nicht zu weit zurücklehnen.", ["Brust hoch.", "Eng greifen.", "Zur oberen Brust ziehen."], 120),
-      ex("Chest Supported Row", 3, "10–12", "Oberer Rücken", "Rücken", "chestrow", "Maschine", "Brust bleibt am Polster.", "Nicht abheben.", ["Brust ans Polster.", "Richtung Körper ziehen.", "Langsam zurück."], 90),
-      ex("Rudern eng", 4, "8–12", "Rückenmitte", "Rücken", "seatedrow", "Maschine", "Schulterblätter zurückziehen.", "Nicht mit Schwung.", ["Brust hoch.", "Zum Bauch ziehen.", "Kontrolliert zurück."], 120),
-      ex("Face Pulls", 3, "15", "Hintere Schulter", "Schulter", "facepull", "Isolation", "Seil Richtung Gesicht.", "Nicht zu schwer.", ["Seil Gesichtshöhe.", "Zum Gesicht ziehen.", "Ellbogen hoch."], 75),
-      ex("Normale Curls", 3, "8–12", "Bizeps", "Arme", "curl", "Isolation", "Oberarm ruhig halten.", "Nicht schwingen.", ["Hantel kontrolliert.", "Hochcurlen.", "Langsam ablassen."], 75),
-      ex("Hammercurls", 3, "10–12", "Bizeps/Unterarm", "Arme", "curl", "Isolation", "Neutraler Griff.", "Nicht werfen.", ["Daumen nach oben.", "Hochcurlen.", "Langsam runter."], 75),
-      ex("Hanging Knee Raises", 3, "12–15", "Bauch", "Bauch", "legraise", "Bauch", "Becken einrollen.", "Nicht schwingen.", ["Stabil hängen.", "Knie hochziehen.", "Langsam ablassen."], 60),
-      ex("Deadlift optional", 2, "5–6", "Rücken/Beine", "Rücken", "rdl", "Optional", "Nur alle 1–2 Wochen.", "Kein Ego-Gewicht.", ["Füße stabil.", "Rücken neutral.", "Körpernah heben."], 180, true)
-    ]
-  },
-  legs: {
-    title: "Beine + Bauch",
-    day: "Mittwoch",
-    ex: [
-      ex("Beinpresse", 4, "10–12", "Beine", "Beine", "legpress", "Maschine", "Kontrollierte Tiefe.", "Nicht schmerzhaft tief.", ["Füße stabil.", "Langsam ablassen.", "Kontrolliert drücken."], 120),
-      ex("Romanian Deadlift", 3, "10", "Beinbeuger/Gluteus", "Beine", "rdl", "Grundübung", "Hüfte nach hinten.", "Rücken nicht rund.", ["Knie leicht gebeugt.", "Hüfte zurück.", "Dehnung spüren."], 150),
-      ex("Beinbeuger", 3, "12–15", "Beinbeuger", "Beine", "legcurl", "Maschine", "Langsam ablassen.", "Nicht abfedern.", ["Polster einstellen.", "Fersen zum Gesäß.", "Langsam strecken."], 90),
-      ex("Beinstrecker leicht", 2, "15", "Quadrizeps", "Beine", "legextension", "Maschine", "Nur schmerzfrei.", "Nicht ruckartig.", ["Sitz einstellen.", "Strecken.", "Langsam ablassen."], 75),
-      ex("Wadenheben", 4, "15–20", "Waden", "Beine", "calf", "Isolation", "Oben kurz halten.", "Nicht federn.", ["Ballen auf Plattform.", "Fersen senken.", "Hochdrücken."], 60),
-      ex("Kabel Crunches schwer", 4, "12", "Bauch", "Bauch", "cablecrunch", "Bauch", "Sauber einrollen.", "Nicht mit Armen ziehen.", ["Seil greifen.", "Einrollen.", "Zurück."], 60),
-      ex("Leg Raises", 3, "15", "Bauch", "Bauch", "legraise", "Bauch", "Kontrolliert.", "Kein Schwung.", ["Rücken stabil.", "Beine anheben.", "Langsam ablassen."], 60),
-      ex("Steigung Laufband", 1, "20–30 min", "Cardio", "Cardio", "treadmill", "Cardio", "Konstant gehen.", "Nicht sprinten.", ["Steigung einstellen.", "Zügig gehen.", "Konstant bleiben."], 60)
-    ]
-  },
-  rest: {
-    title: "Pause",
-    day: "Donnerstag/Sonntag",
-    ex: []
-  },
-  push2: {
-    title: "Push Pump",
-    day: "Freitag",
-    ex: [
-      ex("Schrägbankdrücken", 4, "10–12", "Obere Brust", "Brust", "incline", "Maschine", "Obere Brust priorisieren.", "Nicht zu steil.", ["Bank schräg.", "Drücken.", "Zurück."], 120),
-      ex("Butterfly", 3, "15", "Brust", "Brust", "butterfly", "Maschine", "Langsam.", "Nicht reißen.", ["Dehnen.", "Schließen.", "Kurz halten."], 90),
-      ex("Chest Press", 3, "12", "Brust", "Brust", "bench", "Maschine", "Kontrolliert drücken.", "Schultern nicht vorne.", ["Sitz einstellen.", "Drücken.", "Zurück."], 90),
-      ex("Seitheben", 5, "15", "Seitliche Schulter", "Schulter", "lateral", "Isolation", "Breite Schulter.", "Kein Schwung.", ["Leicht beugen.", "Heben.", "Ablassen."], 75),
-      ex("Reverse Butterfly", 4, "15", "Hintere Schulter", "Schulter", "reversefly", "Isolation", "Hintere Schulter.", "Nacken nicht übernehmen lassen.", ["Brust ans Polster.", "Nach außen ziehen.", "Zurück."], 75),
-      ex("Pushdowns", 3, "12", "Trizeps", "Arme", "pushdown", "Isolation", "Ellbogen stabil.", "Nicht Schulter.", ["Ellbogen fix.", "Runter.", "Hoch."], 75),
-      ex("Kabel Crunches", 4, "15", "Bauch", "Bauch", "cablecrunch", "Bauch", "Kontraktion.", "Nicht Arme.", ["Seil greifen.", "Einrollen.", "Zurück."], 60)
-    ]
-  },
-  pull2: {
-    title: "Pull + Bauch",
-    day: "Samstag",
-    ex: [
-      ex("Latziehen breit", 4, "10", "Lat", "Rücken", "latpulldown", "Maschine", "Ellbogen runter.", "Nicht Nacken.", ["Breit greifen.", "Zur Brust.", "Hoch."], 120),
-      ex("Rudern eng", 4, "10", "Rückenmitte", "Rücken", "seatedrow", "Maschine", "Kontrolliert.", "Kein Schwung.", ["Brust hoch.", "Ziehen.", "Zurück."], 120),
-      ex("Rudern breit", 3, "12", "Oberer Rücken", "Rücken", "chestrow", "Maschine", "Ellbogen außen.", "Schultern nicht hoch.", ["Breit greifen.", "Rudern.", "Zurück."], 90),
-      ex("Face Pulls", 4, "15", "Hintere Schulter", "Schulter", "facepull", "Isolation", "Haltung.", "Nicht zu schwer.", ["Seil Gesichtshöhe.", "Ziehen.", "Außenrotieren."], 75),
-      ex("Normale Curls", 3, "10", "Bizeps", "Arme", "curl", "Isolation", "Sauber.", "Nicht schwingen.", ["Stehen.", "Curlen.", "Ablassen."], 75),
-      ex("Hammercurls", 3, "12", "Bizeps/Unterarm", "Arme", "curl", "Isolation", "Neutraler Griff.", "Nicht werfen.", ["Neutral.", "Hoch.", "Runter."], 75),
-      ex("Kabel Crunches", 4, "12", "Bauch", "Bauch", "cablecrunch", "Bauch", "Schwer sauber.", "Nicht Arme.", ["Seil.", "Einrollen.", "Zurück."], 60),
-      ex("Steigung Laufband", 1, "30 min", "Cardio", "Cardio", "treadmill", "Cardio", "Gehen.", "Nicht sprinten.", ["Steigung.", "Gehen.", "Konstant."], 60)
-    ]
-  }
-};
-
-const dayMap = { 1: "push1", 2: "pull1", 3: "legs", 4: "rest", 5: "push2", 6: "pull2", 0: "rest" };
-
-let currentWorkout = dayMap[new Date().getDay()] || "push1";
-let selectedExercise = null;
-let editId = null;
-let hideDone = false;
-let activeFilter = "all";
-
-const $ = (id) => document.getElementById(id);
-
-const IMG_MAP = {
-  bench: "bench.png",
-  incline: "incline.png",
-  shoulderpress: "shoulderpress.png",
-  butterfly: "butterfly.png",
-  reversefly: "butterfly.png",
-  lateral: "lateral.png",
-  latpulldown: "latpulldown.png",
-  chestrow: "seatedrow.png",
-  seatedrow: "seatedrow.png",
-  facepull: "seatedrow.png",
-  pushdown: "pushdown.png",
-  overheadtri: "pushdown.png",
-  cablecrunch: "pushdown.png",
-  curl: "curl.png",
-  legpress: "legpress.png",
-  legcurl: "legpress.png",
-  legextension: "legpress.png",
-  calf: "legpress.png",
-  legraise: "curl.png",
-  rdl: "legpress.png",
-  dips: "bench.png",
-  treadmill: "legpress.png",
-  rest: "bench.png"
-};
-
-function img(name) {
-  return `assets/${IMG_MAP[name] || 'bench.png'}`;
-}
-
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function dateDE(d) {
-  return new Date(d + "T00:00:00").toLocaleDateString("de-AT");
-}
-
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, (m) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  }[m]));
-}
-
-function attr(s) {
-  return String(s).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
-}
-
-function getSets() {
-  let v = JSON.parse(localStorage.getItem(TRAIN_KEY) || "[]");
-  if (!v.length) {
-    for (const k of OLD_KEYS) {
-      const old = JSON.parse(localStorage.getItem(k) || "[]");
-      if (old.length) {
-        v = old.map((s) => ({
-          ...s,
-          workout: s.workout || "custom",
-          workoutTitle: s.workoutTitle || s.day || "Training",
-          group: s.group || s.muscle || "Sonstiges"
-        }));
-        localStorage.setItem(TRAIN_KEY, JSON.stringify(v));
-        break;
-      }
-    }
-  }
-  return v;
-}
-
-function setSets(v) {
-  localStorage.setItem(TRAIN_KEY, JSON.stringify(v));
-}
-
-function init() {
-  fillSelects();
-
-  document.querySelectorAll(".nav").forEach((b) => {
-    b.addEventListener("click", () => showScreen(b.dataset.screen));
-  });
-
-  $("workoutSelect").addEventListener("change", (e) => {
-    currentWorkout = e.target.value || "push1";
-    renderAll();
-  });
-
-  $("toggleDone").addEventListener("click", () => {
-    hideDone = !hideDone;
-    $("toggleDone").textContent = hideDone ? "Alle anzeigen" : "Erledigte ausblenden";
-    renderExercises();
-  });
-
-  $("startWorkout").addEventListener("click", () => {
-    const next = getNextExercise();
-    if (next) openExercise(next.name);
-  });
-
-  $("finishWorkout").addEventListener("click", finishWorkout);
-  $("closeExerciseModal").addEventListener("click", () => $("exerciseModal").classList.add("hidden"));
-  $("openSetModal").addEventListener("click", openSetModal);
-  $("closeSetModal").addEventListener("click", () => $("setModal").classList.add("hidden"));
-  $("saveSet").addEventListener("click", saveSet);
-  $("copyLastSet").addEventListener("click", copyLastIntoSet);
-  $("closeEditModal").addEventListener("click", () => $("editModal").classList.add("hidden"));
-  $("saveEdit").addEventListener("click", saveEdit);
-
-  document.querySelectorAll(".filter").forEach((b) => {
-    b.addEventListener("click", () => {
-      activeFilter = b.dataset.filter;
-      document.querySelectorAll(".filter").forEach((x) => x.classList.toggle("active", x === b));
-      renderLibrary();
-    });
-  });
-
-  $("librarySearch").addEventListener("input", renderLibrary);
-  $("logSearch").addEventListener("input", renderLog);
-  $("logFilter").addEventListener("change", renderLog);
-  $("exportJson").addEventListener("click", exportJSON);
-  $("importJson").addEventListener("change", importJSON);
-  $("exportCsv").addEventListener("click", exportCSV);
-  $("clearAll").addEventListener("click", clearAll);
-
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js?v=14");
-  }
-
-  renderAll();
-}
-
-function fillSelects() {
-  const ordered = ["push1", "pull1", "legs", "rest", "push2", "pull2"];
-  const opts = ordered
-    .map((k) => `<option value="${k}">${workouts[k].day}: ${workouts[k].title}</option>`)
-    .join("");
-
-  $("workoutSelect").innerHTML = opts;
-  $("logFilter").innerHTML = `<option value="">Alle Workouts</option>${opts}`;
-  $("workoutSelect").value = currentWorkout;
-}
-
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("active", s.id === id));
-  document.querySelectorAll(".nav").forEach((b) => b.classList.toggle("active", b.dataset.screen === id));
-  renderAll();
-}
-
-function renderAll() {
-  if (!workouts[currentWorkout]) currentWorkout = "push1";
-
-  const w = workouts[currentWorkout];
-
-  $("workoutSelect").value = currentWorkout;
-  $("todayWorkoutTitle").textContent = w.title;
-  $("todayMeta").textContent = `${new Date().toLocaleDateString("de-AT", { weekday: "long" })}, ${dateDE(today())}`;
-
-  renderDashboard();
-  renderExercises();
-  renderPlan();
-  renderLibrary();
-  renderStats();
-  renderLog();
-}
-
-function todayWorkoutSets() {
-  return getSets().filter((s) => s.date === today() && s.workout === currentWorkout);
-}
-
-function setsFor(name) {
-  return todayWorkoutSets().filter((s) => s.exercise === name);
-}
-
-function isDone(e) {
-  return setsFor(e.name).length >= Number(e.sets);
-}
-
-function lastSet(name) {
-  return getSets().filter((s) => s.exercise === name).sort((a, b) => b.id - a.id)[0];
-}
-
-function getNextExercise() {
-  const w = workouts[currentWorkout];
-  if (!w || !w.ex.length) return null;
-  return w.ex.find((e) => !e.opt && !isDone(e)) || w.ex.find((e) => !isDone(e)) || null;
-}
-
-function suggest(e) {
-  const l = lastSet(e.name);
-  if (!l) return { text: "moderat starten", weight: "", reps: "" };
-
-  const m = String(e.reps).match(/(\d+)[–-](\d+)/);
-  if (m) {
-    const low = Number(m[1]);
-    const high = Number(m[2]);
-
-    if (Number(l.reps) < high) {
-      return { text: `${l.weight} kg × ${Number(l.reps) + 1}`, weight: l.weight, reps: Number(l.reps) + 1 };
-    }
-
-    return {
-      text: `${(Number(l.weight) + 2.5).toFixed(1).replace(".0", "")} kg × ${low}`,
-      weight: Number(l.weight) + 2.5,
-      reps: low
-    };
-  }
-
-  return { text: `${l.weight} kg × ${l.reps}`, weight: l.weight, reps: l.reps };
-}
-
-function renderDashboard() {
-  const w = workouts[currentWorkout];
-  const data = todayWorkoutSets();
-  const req = w.ex.filter((e) => !e.opt);
-  const total = req.reduce((a, e) => a + Number(e.sets), 0);
-  const done = data.filter((s) => !s.optional).length;
-  const pct = total ? Math.min(100, Math.round((done / total) * 100)) : 0;
-
-  $("exerciseDone").textContent = `${req.filter(isDone).length}/${req.length}`;
-  $("setsDone").textContent = `${done}/${total}`;
-  $("volumeToday").textContent = `${Math.round(data.reduce((a, s) => a + s.weight * s.reps, 0))} kg`;
-  $("mainProgress").style.width = pct + "%";
-
-  const next = getNextExercise();
-
-  if (next) {
-    const l = lastSet(next.name);
-    const s = suggest(next);
-
-    $("nextExerciseName").textContent = next.name;
-    $("nextExerciseInfo").textContent = l ? `Letztes Training: ${l.weight} kg × ${l.reps}` : "Letztes Training: noch nichts";
-    $("nextSuggestion").textContent = `Vorschlag: ${s.text}`;
-    $("nextExerciseImage").src = img(next.img);
-  } else if (w.ex.length === 0) {
-    $("nextExerciseName").textContent = "Pause / Regeneration";
-    $("nextExerciseInfo").textContent = "Heute ist kein Krafttraining geplant.";
-    $("nextSuggestion").textContent = "Du kannst oben manuell ein Training auswählen.";
-    $("nextExerciseImage").src = img("rest");
-  } else {
-    $("nextExerciseName").textContent = "Training fertig";
-    $("nextExerciseInfo").textContent = "Alle Pflichtübungen erledigt.";
-    $("nextSuggestion").textContent = "Training abschließen.";
-    $("nextExerciseImage").src = img("rest");
-  }
-}
-
-function renderExercises() {
-  const w = workouts[currentWorkout];
-
-  if (!w.ex.length) {
-    $("exerciseList").innerHTML = `
-      <div class="card">
-        <h2>Heute ist Pause</h2>
-        <p class="muted">Wenn du trotzdem trainierst, wähle oben manuell Push, Pull oder Beine aus.</p>
-      </div>
-    `;
-    return;
-  }
-
-  $("exerciseList").innerHTML = w.ex
-    .filter((e) => !hideDone || !isDone(e))
-    .map((e) => {
-      const done = setsFor(e.name).length;
-      const pct = Math.min(100, Math.round((done / Number(e.sets)) * 100));
-      const l = lastSet(e.name);
-      const s = suggest(e);
-
-      return `
-        <div class="exerciseCard ${isDone(e) ? "done" : ""}">
-          <img class="exerciseThumb" src="${img(e.img)}" alt="${esc(e.name)}">
-          <div>
-            <div class="exerciseTop">
-              <div>
-                <div class="exerciseName">${esc(e.name)}${e.opt ? " · optional" : ""}</div>
-                <div class="exerciseMeta">${e.sets} Sätze · ${e.reps} Wdh.</div>
-              </div>
-              <span class="muscleTag">${esc(e.muscle)}</span>
-            </div>
-            <div class="progressLine"><div style="width:${pct}%"></div></div>
-            <div class="exerciseDescription">${esc(e.description)}</div>
-            <div class="exerciseLast">Letztes Training: ${l ? `${l.weight} kg × ${l.reps}` : "noch nichts"}</div>
-            <div class="exerciseSuggestion">Vorschlag heute: <b>${esc(s.text)}</b></div>
-            <div class="exerciseActions">
-              <button class="miniAction logAction" onclick="openSetFor('${attr(e.name)}')">Satz eintragen</button>
-              <button class="miniAction detailAction" onclick="openExercise('${attr(e.name)}')">Details</button>
-            </div>
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-}
-
-function renderPlan() {
-  const days = [
-    ["Montag", "push1"],
-    ["Dienstag", "pull1"],
-    ["Mittwoch", "legs"],
-    ["Donnerstag", "rest"],
-    ["Freitag", "push2"],
-    ["Samstag", "pull2"],
-    ["Sonntag", "rest"]
-  ];
-
-  const todayIndex = (new Date().getDay() + 6) % 7;
-
-  $("weekPlan").innerHTML = days.map(([d, k], i) => {
-    const w = workouts[k];
-    const text = k === "rest"
-      ? "Regeneration / optional leichtes Cardio"
-      : w.ex.filter((e) => !e.opt).map((e) => e.name).slice(0, 5).join(", ") + (w.ex.filter((e) => !e.opt).length > 5 ? " …" : "");
-
-    return `<div class="weekItem ${i === todayIndex ? "today" : ""}"><b>${d}: ${w.title}</b><br><span>${esc(text)}</span></div>`;
-  }).join("");
-}
-
-function allExercises() {
-  const m = new Map();
-  Object.values(workouts).forEach((w) => w.ex.forEach((e) => m.set(e.name, e)));
-  return [...m.values()];
-}
-
-function findExercise(name) {
-  for (const w of Object.values(workouts)) {
-    const e = w.ex.find((x) => x.name === name);
-    if (e) return e;
-  }
-}
-
-function renderLibrary() {
-  const q = ($("librarySearch").value || "").toLowerCase();
-  const arr = allExercises().filter((e) => (activeFilter === "all" || e.group === activeFilter) && (!q || e.name.toLowerCase().includes(q)));
-
-  $("libraryList").innerHTML = arr.map((e) => `
-    <div class="libraryItem" onclick="openExercise('${attr(e.name)}')">
-      <img src="${img(e.img)}" alt="${esc(e.name)}">
-      <div>
-        <div class="exerciseName">${esc(e.name)}</div>
-        <div class="exerciseMeta">${esc(e.muscle)} · ${esc(e.type)}</div>
-        <div class="exerciseDescription">${esc(e.description)}</div>
-        <div class="exerciseSuggestion">Tipp: ${esc(e.tip)}</div>
-      </div>
-    </div>
-  `).join("") || `<p class="muted">Keine Übung gefunden.</p>`;
-}
-
-function openExercise(name) {
-  selectedExercise = findExercise(name);
-  if (!selectedExercise) return;
-
-  const e = selectedExercise;
-  $("modalMuscle").textContent = e.muscle;
-  $("modalTitle").textContent = e.name;
-  $("exerciseVisual").src = img(e.img);
-  $("modalSets").textContent = e.sets;
-  $("modalReps").textContent = e.reps;
-  $("modalRest").textContent = e.rest + "s";
-  $("modalType").textContent = e.type;
-  $("modalDescription").textContent = e.description;
-  $("executionSteps").innerHTML = e.steps.map((x) => `<li>${esc(x)}</li>`).join("");
-  $("modalTip").textContent = e.tip;
-  $("modalAvoid").textContent = e.avoid;
-
-  const l = lastSet(e.name);
-  const s = suggest(e);
-
-  $("modalSuggestion").textContent = s.text;
-  $("modalLast").textContent = l ? `Letztes Training: ${l.weight} kg × ${l.reps}` : "Letztes Training: noch nichts";
-  $("exerciseModal").classList.remove("hidden");
-}
-
-function openSetFor(name) {
-  openExercise(name);
-  openSetModal();
-}
-
-function openSetModal() {
-  if (!selectedExercise) return;
-
-  const s = suggest(selectedExercise);
-
-  $("setExerciseTitle").textContent = selectedExercise.name;
-  $("setNo").value = setsFor(selectedExercise.name).length + 1;
-  $("setWeight").value = s.weight || "";
-  $("setReps").value = s.reps || "";
-  $("setNote").value = "";
-  $("setModal").classList.remove("hidden");
-}
-
-function saveSet() {
-  if (!selectedExercise) return;
-
-  const weight = Number($("setWeight").value);
-  const reps = Number($("setReps").value);
-
-  if (!weight || !reps) {
-    alert("Bitte Gewicht und Wiederholungen eintragen.");
-    return;
-  }
-
-  const data = getSets();
-
-  data.unshift({
-    id: Date.now(),
-    date: today(),
-    workout: currentWorkout,
-    workoutTitle: workouts[currentWorkout].title,
-    exercise: selectedExercise.name,
-    setNo: Number($("setNo").value || 1),
-    weight,
-    reps,
-    note: $("setNote").value.trim(),
-    muscle: selectedExercise.muscle,
-    group: selectedExercise.group,
-    optional: selectedExercise.opt
-  });
-
-  setSets(data);
-  $("setModal").classList.add("hidden");
-  $("exerciseModal").classList.add("hidden");
-  renderAll();
-}
-
-function copyLastIntoSet() {
-  const l = lastSet(selectedExercise?.name);
-  if (l) {
-    $("setWeight").value = l.weight;
-    $("setReps").value = l.reps;
-    $("setNote").value = l.note || "";
-  }
-}
-
-function renderStats() {
-  const data = getSets();
-  const weekStart = new Date();
-  weekStart.setDate(weekStart.getDate() - ((weekStart.getDay() + 6) % 7));
-  weekStart.setHours(0, 0, 0, 0);
-
-  $("statWorkouts").textContent = new Set(data.filter((s) => new Date(s.date) >= weekStart).map((s) => s.date)).size;
-  $("statSets").textContent = data.length;
-  $("statVolume").textContent = Math.round(data.reduce((a, s) => a + s.weight * s.reps, 0)).toLocaleString("de-AT");
-
-  const best = {};
-  data.forEach((s) => {
-    const score = s.weight * (1 + s.reps / 30);
-    if (!best[s.exercise] || score > best[s.exercise].score) best[s.exercise] = { ...s, score };
-  });
-
-  $("statPR").textContent = Object.keys(best).length;
-
-  const vol = {};
-  data.forEach((s) => {
-    vol[s.group || s.muscle || "Sonstiges"] = (vol[s.group || s.muscle || "Sonstiges"] || 0) + s.weight * s.reps;
-  });
-
-  const max = Math.max(1, ...Object.values(vol));
-
-  $("muscleBars").innerHTML = Object.entries(vol).sort((a, b) => b[1] - a[1]).map(([m, v]) => `
-    <div class="barRow">
-      <div class="barTop"><span>${esc(m)}</span><span>${Math.round(v).toLocaleString("de-AT")} kg</span></div>
-      <div class="barTrack"><div class="barFill" style="width:${Math.round((v / max) * 100)}%"></div></div>
-    </div>
-  `).join("") || `<p class="muted">Noch kein Volumen vorhanden.</p>`;
-
-  $("prList").innerHTML = Object.values(best).sort((a, b) => b.score - a.score).map((s) => `
-    <div class="logItem">
-      <div class="logTitle">${esc(s.exercise)}</div>
-      <div class="logMeta">PR: ${s.weight} kg × ${s.reps} · ${dateDE(s.date)}<br>Score: ${s.score.toFixed(1)}</div>
-    </div>
-  `).join("") || `<p class="muted">Noch keine PRs.</p>`;
-}
-
-function renderLog() {
-  const q = ($("logSearch").value || "").toLowerCase();
-  const fw = $("logFilter").value || "";
-  const rows = getSets().filter((s) => (!q || s.exercise.toLowerCase().includes(q)) && (!fw || s.workout === fw));
-
-  $("logList").innerHTML = rows.map((s) => `
-    <div class="logItem">
-      <div class="logTitle">${esc(s.exercise)}</div>
-      <div class="logMeta">${dateDE(s.date)} · ${esc(s.workoutTitle || "Training")} · Satz ${s.setNo}<br>${s.weight} kg × ${s.reps} Wdh.${s.note ? " · " + esc(s.note) : ""}</div>
-      <div class="logActions">
-        <button class="editBtn" onclick="editSet(${s.id})">Bearbeiten</button>
-        <button class="copyBtn" onclick="copySet(${s.id})">Kopieren</button>
-        <button class="deleteBtn" onclick="deleteSet(${s.id})">Löschen</button>
-      </div>
-    </div>
-  `).join("") || `<p class="muted">Noch keine Einträge.</p>`;
-}
-
-function editSet(id) {
-  const s = getSets().find((x) => x.id === id);
-  if (!s) return;
-
-  editId = id;
-  $("editSetNo").value = s.setNo;
-  $("editWeight").value = s.weight;
-  $("editReps").value = s.reps;
-  $("editNote").value = s.note || "";
-  $("editModal").classList.remove("hidden");
-}
-
-function saveEdit() {
-  const data = getSets();
-  const i = data.findIndex((s) => s.id === editId);
-
-  if (i >= 0) {
-    data[i] = {
-      ...data[i],
-      setNo: Number($("editSetNo").value),
-      weight: Number($("editWeight").value),
-      reps: Number($("editReps").value),
-      note: $("editNote").value
-    };
-    setSets(data);
-  }
-
-  $("editModal").classList.add("hidden");
-  renderAll();
-}
-
-function copySet(id) {
-  const s = getSets().find((x) => x.id === id);
-  if (!s) return;
-
-  setSets([{ ...s, id: Date.now(), date: today() }, ...getSets()]);
-  renderAll();
-}
-
-function deleteSet(id) {
-  if (confirm("Satz wirklich löschen?")) {
-    setSets(getSets().filter((s) => s.id !== id));
-    renderAll();
-  }
-}
-
-function finishWorkout() {
-  const data = todayWorkoutSets();
-  const vol = Math.round(data.reduce((a, s) => a + s.weight * s.reps, 0));
-  alert(`Training abgeschlossen\nSätze: ${data.length}\nVolumen: ${vol} kg`);
-}
-
-function exportJSON() {
-  download("gymjournal-backup.json", JSON.stringify({ version: 14, sets: getSets() }, null, 2), "application/json");
-}
-
-function importJSON(e) {
-  const f = e.target.files[0];
-  if (!f) return;
-
-  const r = new FileReader();
-  r.onload = () => {
-    try {
-      const b = JSON.parse(r.result);
-      if (b.sets) setSets(b.sets);
-      renderAll();
-      alert("Backup importiert.");
-    } catch {
-      alert("Backup ungültig.");
-    }
-  };
-  r.readAsText(f);
-}
-
-function exportCSV() {
-  const rows = [
-    ["Datum", "Workout", "Übung", "Satz", "Gewicht", "Wiederholungen", "Muskel", "Notiz"],
-    ...getSets().map((s) => [s.date, s.workoutTitle, s.exercise, s.setNo, s.weight, s.reps, s.muscle, s.note])
-  ];
-
-  download("gymjournal.csv", rows.map((r) => r.map((v) => `"${String(v ?? "").replaceAll('"', '""')}"`).join(";")).join("\n"), "text/csv");
-}
-
-function download(name, content, type) {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([content], { type }));
-  a.download = name;
-  a.click();
-}
-
-function clearAll() {
-  if (confirm("Alle Daten löschen?")) {
-    localStorage.removeItem(TRAIN_KEY);
-    renderAll();
-  }
-}
-
+const LIBRARY_EXTRA=[
+simple("Kurzhantel Bankdrücken","Brust","Brust","bench"),simple("Langhantel Bankdrücken","Brust","Brust","bench"),simple("Schrägbank Maschine","Obere Brust","Brust","incline"),simple("Kurzhantel Schrägbankdrücken","Obere Brust","Brust","incline"),simple("Kabel Flys","Brust","Brust","butterfly"),simple("Pec Deck","Brust","Brust","butterfly"),simple("Decline Chest Press","Brust","Brust","bench"),simple("Smith Machine Bench Press","Brust","Brust","bench"),
+simple("Latziehen neutral","Lat","Rücken","latpulldown"),simple("Kabelrudern breit","Oberer Rücken","Rücken","seatedrow"),simple("T-Bar Row","Rückenmitte","Rücken","seatedrow"),simple("Rudermaschine","Rücken","Rücken","seatedrow"),simple("Einarmiges Kurzhantelrudern","Rücken","Rücken","seatedrow"),simple("Pullover Maschine","Lat","Rücken","latpulldown"),simple("Straight Arm Pulldown","Lat","Rücken","latpulldown"),simple("Assisted Pull-Ups","Lat","Rücken","latpulldown"),
+simple("Kurzhantel Schulterdrücken","Schulter","Schulter","shoulderpress"),simple("Seitheben Maschine","Seitliche Schulter","Schulter","lateral"),simple("Seitheben Kabel","Seitliche Schulter","Schulter","lateral"),simple("Frontheben","Vordere Schulter","Schulter","lateral"),simple("Rear Delt Cable Fly","Hintere Schulter","Schulter","reversefly"),
+simple("Kabelcurls","Bizeps","Arme","curl"),simple("Preacher Curls","Bizeps","Arme","curl"),simple("Scott Curls Maschine","Bizeps","Arme","curl"),simple("Konzentrationscurls","Bizeps","Arme","curl"),simple("Incline Dumbbell Curls","Bizeps","Arme","curl"),simple("EZ-Bar Curls","Bizeps","Arme","curl"),simple("Rope Hammer Curls","Bizeps/Unterarm","Arme","curl"),
+simple("Rope Pushdowns","Trizeps","Arme","pushdown"),simple("Einarmige Pushdowns","Trizeps","Arme","pushdown"),simple("Trizeps Maschine","Trizeps","Arme","pushdown"),simple("Skullcrusher","Trizeps","Arme","overheadtri"),simple("French Press","Trizeps","Arme","overheadtri"),simple("Assisted Dips","Trizeps/Brust","Arme","dips"),simple("Close Grip Chest Press","Trizeps/Brust","Arme","bench"),simple("Crossbody Cable Extension","Trizeps","Arme","pushdown"),
+simple("Leg Press 45°","Beine","Beine","legpress"),simple("Leg Curl liegend","Beinbeuger","Beine","legcurl"),simple("Seated Calf Raises","Waden","Beine","calf"),simple("Hip Thrust Maschine","Gluteus","Beine","legpress"),simple("Glute Bridge","Gluteus","Beine","legpress"),simple("Hack Squat optional","Beine","Beine","legpress"),simple("Smith Machine Squat optional","Beine","Beine","legpress"),simple("Step-Ups optional","Beine","Beine","legpress"),
+simple("Crunch Maschine","Bauch","Bauch","cablecrunch"),simple("Plank","Core","Bauch","legraise"),simple("Side Plank","Core seitlich","Bauch","legraise"),simple("Russian Twists","Bauch seitlich","Bauch","legraise"),simple("Ab Wheel optional","Bauch","Bauch","legraise"),simple("Reverse Crunches","Bauch","Bauch","legraise"),simple("Cable Woodchoppers","Bauch seitlich","Bauch","cablecrunch"),
+simple("Fahrrad","Cardio","Cardio","treadmill","Cardio"),simple("Crosstrainer","Cardio","Cardio","treadmill","Cardio"),simple("Stairmaster","Cardio","Cardio","treadmill","Cardio"),simple("Rudergerät","Cardio","Cardio","treadmill","Cardio")];
+
+const dayMap={1:"push1",2:"pull1",3:"legs",4:"rest",5:"push2",6:"pull2",0:"rest"};
+let currentWorkout=dayMap[new Date().getDay()]||"push1", selectedExercise=null, editId=null, hideDone=false, activeFilter="all", replaceFilter="all", replaceIndex=null, statsMode="day", openPlan={}, libraryCache=[];
+const $=id=>document.getElementById(id);
+function img(name){return `assets/${name}.png`}
+
+function today(){return new Date().toISOString().slice(0,10)}
+function monthKey(d=new Date()){return d.toISOString().slice(0,7)}
+function dateDE(d){return new Date(d+"T00:00:00").toLocaleDateString("de-AT")}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function attr(s){return String(s).replace(/'/g,"&#39;").replace(/"/g,"&quot;")}
+function getSets(){let v=JSON.parse(localStorage.getItem(TRAIN_KEY)||"[]");if(!v.length){for(const k of OLD_KEYS){const old=JSON.parse(localStorage.getItem(k)||"[]");if(old.length){v=old.map(s=>({...s,workout:s.workout||"custom",workoutTitle:s.workoutTitle||s.day||"Training",group:s.group||s.muscle||"Sonstiges"}));localStorage.setItem(TRAIN_KEY,JSON.stringify(v));break}}}return v}
+function setSets(v){localStorage.setItem(TRAIN_KEY,JSON.stringify(v))}
+function overrideKey(){return `${today()}_${currentWorkout}`}
+function getOverrides(){return JSON.parse(localStorage.getItem(OVERRIDE_KEY)||"{}")}
+function setOverrides(v){localStorage.setItem(OVERRIDE_KEY,JSON.stringify(v))}
+function getBaseExercises(workoutKey=currentWorkout){return PLAN[workoutKey]?.ex||[]}
+function getTodayExercises(){const names=getOverrides()[overrideKey()];if(!names)return getBaseExercises();return names.map(n=>findExercise(n)).filter(Boolean)}
+function saveTodayExercises(exs){const o=getOverrides();o[overrideKey()]=exs.map(e=>e.name);setOverrides(o)}
+function allExercises(){if(libraryCache.length)return libraryCache;const m=new Map();Object.values(PLAN).forEach(w=>w.ex.forEach(e=>m.set(e.name,e)));LIBRARY_EXTRA.forEach(e=>m.set(e.name,e));libraryCache=[...m.values()].sort((a,b)=>a.group.localeCompare(b.group)||a.name.localeCompare(b.name));return libraryCache}
+function findExercise(name){return allExercises().find(e=>e.name===name)}
+function lastSet(name){return getSets().filter(s=>s.exercise===name).sort((a,b)=>b.id-a.id)[0]}
+function todayWorkoutSets(){return getSets().filter(s=>s.date===today()&&s.workout===currentWorkout)}
+function setsFor(name){return todayWorkoutSets().filter(s=>s.exercise===name).sort((a,b)=>a.setNo-b.setNo)}
+function isDone(e){return setsFor(e.name).length>=Number(e.sets)}
+function getNextExercise(){const exs=getTodayExercises();return exs.find(e=>!e.opt&&!isDone(e))||exs.find(e=>!isDone(e))||null}
+function suggest(e){const l=lastSet(e.name);if(!l)return{text:"moderat starten",weight:"",reps:""};const m=String(e.reps).match(/(\d+)[–-](\d+)/);if(m){const low=Number(m[1]),high=Number(m[2]);if(Number(l.reps)<high)return{text:`${l.weight} kg × ${Number(l.reps)+1}`,weight:l.weight,reps:Number(l.reps)+1};return{text:`${(Number(l.weight)+2.5).toFixed(1).replace(".0","")} kg × ${low}`,weight:Number(l.weight)+2.5,reps:low}}return{text:`${l.weight} kg × ${l.reps}`,weight:l.weight,reps:l.reps}}
+
+function init(){fillSelects();renderFilters();document.querySelectorAll(".nav").forEach(b=>b.addEventListener("click",()=>showScreen(b.dataset.screen)));$("workoutSelect").addEventListener("change",e=>{currentWorkout=e.target.value||"push1";renderAll()});$("toggleDone").addEventListener("click",()=>{hideDone=!hideDone;$("toggleDone").textContent=hideDone?"Alle anzeigen":"Erledigte ausblenden";renderExercises()});$("startWorkout").addEventListener("click",()=>{const next=getNextExercise();if(next)openExercise(next.name)});$("resetTodayPlan").addEventListener("click",resetTodayPlan);$("closeExerciseModal").addEventListener("click",()=>$("exerciseModal").classList.add("hidden"));$("openSetModal").addEventListener("click",openSetModal);$("closeSetModal").addEventListener("click",()=>$("setModal").classList.add("hidden"));$("saveSet").addEventListener("click",saveSet);$("copyLastSet").addEventListener("click",copyLastIntoSet);$("closeEditModal").addEventListener("click",()=>$("editModal").classList.add("hidden"));$("saveEdit").addEventListener("click",saveEdit);$("closeReplaceModal").addEventListener("click",()=>$("replaceModal").classList.add("hidden"));$("librarySearch").addEventListener("input",renderLibrary);$("replaceSearch").addEventListener("input",renderReplaceList);$("logSearch").addEventListener("input",renderLog);$("logFilter").addEventListener("change",renderLog);$("exportJson").addEventListener("click",exportJSON);$("importJson").addEventListener("change",importJSON);$("exportCsv").addEventListener("click",exportCSV);$("clearAll").addEventListener("click",clearAll);document.querySelectorAll(".modeBtn").forEach(b=>b.addEventListener("click",()=>{statsMode=b.dataset.mode;document.querySelectorAll(".modeBtn").forEach(x=>x.classList.toggle("active",x===b));renderStats()}));if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js?v=15");renderAll()}
+function fillSelects(){const order=["push1","pull1","legs","rest","push2","pull2"];const opts=order.map(k=>`<option value="${k}">${PLAN[k].day}: ${PLAN[k].title}</option>`).join("");$("workoutSelect").innerHTML=opts;$("logFilter").innerHTML=`<option value="">Alle Workouts</option>${opts}`;$("workoutSelect").value=currentWorkout}
+function renderFilters(){const groups=["all","Brust","Rücken","Schulter","Arme","Beine","Bauch","Cardio"];$("libraryFilters").innerHTML=groups.map(g=>`<button class="filter ${g==="all"?"active":""}" data-filter="${g}">${g==="all"?"Alle":g}</button>`).join("");$("replaceFilters").innerHTML=groups.map(g=>`<button class="filter ${g==="all"?"active":""}" data-filter="${g}">${g==="all"?"Alle":g}</button>`).join("");$("libraryFilters").querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{activeFilter=b.dataset.filter;$("libraryFilters").querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));renderLibrary()}));$("replaceFilters").querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{replaceFilter=b.dataset.filter;$("replaceFilters").querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));renderReplaceList()}))}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));renderAll()}
+function renderAll(){if(!PLAN[currentWorkout])currentWorkout="push1";const w=PLAN[currentWorkout];$("workoutSelect").value=currentWorkout;$("todayWorkoutTitle").textContent=w.title;$("todayMeta").textContent=`${new Date().toLocaleDateString("de-AT",{weekday:"long"})}, ${dateDE(today())}`;renderDashboard();renderExercises();renderPlan();renderLibrary();renderStats();renderLog()}
+function renderDashboard(){const w=PLAN[currentWorkout],exs=getTodayExercises(),data=todayWorkoutSets(),req=exs.filter(e=>!e.opt),total=req.reduce((a,e)=>a+Number(e.sets),0),done=data.filter(s=>!s.optional).length,pct=total?Math.min(100,Math.round(done/total*100)):0;$("exerciseDone").textContent=`${req.filter(isDone).length}/${req.length}`;$("setsDone").textContent=`${done}/${total}`;$("volumeToday").textContent=`${Math.round(data.reduce((a,s)=>a+s.weight*s.reps,0))} kg`;$("mainProgress").style.width=pct+"%";const next=getNextExercise();if(next){const l=lastSet(next.name),s=suggest(next);$("nextExerciseName").textContent=next.name;$("nextExerciseInfo").textContent=l?`Letztes Training: ${l.weight} kg × ${l.reps}`:"Letztes Training: noch nichts";$("nextSuggestion").textContent=`Vorschlag: ${s.text}`;$("nextExerciseImage").src=img(next.img)}else if(w.ex.length===0){$("nextExerciseName").textContent="Pause / Regeneration";$("nextExerciseInfo").textContent="Heute ist kein Krafttraining geplant.";$("nextSuggestion").textContent="Du kannst oben manuell ein Training auswählen.";$("nextExerciseImage").src=img("rest")}else{$("nextExerciseName").textContent="Training fertig";$("nextExerciseInfo").textContent="Alle Pflichtübungen erledigt.";$("nextSuggestion").textContent="Training abschließen.";$("nextExerciseImage").src=img("rest")}}
+function renderExercises(){const exs=getTodayExercises();if(!exs.length){$("exerciseList").innerHTML=`<div class="card"><h2>Heute ist Pause</h2><p class="muted">Wenn du trotzdem trainierst, wähle oben Push, Pull oder Beine aus.</p></div>`;return}$("exerciseList").innerHTML=exs.filter(e=>!hideDone||!isDone(e)).map((e,index)=>{const doneSets=setsFor(e.name),pct=Math.min(100,Math.round(doneSets.length/Number(e.sets)*100)),l=lastSet(e.name),s=suggest(e);const setHtml=doneSets.length?`<div class="setList">${doneSets.map(st=>`<div class="setItem"><b>Satz ${st.setNo}: ${st.weight} kg × ${st.reps}</b><div class="setButtons"><button class="editBtn" onclick="editSet(${st.id})">Bearbeiten</button><button class="copyBtn" onclick="copySet(${st.id})">Kopieren</button><button class="deleteBtn" onclick="deleteSet(${st.id})">Löschen</button></div></div>`).join("")}</div>`:`<div class="exerciseMeta">Noch keine Sätze heute.</div>`;return `<div class="exerciseCard ${isDone(e)?"done":""}"><img class="exerciseThumb" src="${img(e.img)}" alt="${esc(e.name)}"><div><div class="exerciseTop"><div><div class="exerciseName">${esc(e.name)}${e.opt?" · optional":""}</div><div class="exerciseMeta">${e.sets} Sätze · ${e.reps} Wdh.</div></div><span class="muscleTag">${esc(e.muscle)}</span></div><div class="progressLine"><div style="width:${pct}%"></div></div><div class="exerciseDescription">${esc(e.description)}</div><div class="exerciseLast">Letztes Training: ${l?`${l.weight} kg × ${l.reps}`:"noch nichts"}</div><div class="exerciseSuggestion">Vorschlag heute: <b>${esc(s.text)}</b></div>${setHtml}<div class="exerciseActions"><button class="miniAction logAction" onclick="openSetFor('${attr(e.name)}')">Satz eintragen</button><button class="miniAction detailAction" onclick="openExercise('${attr(e.name)}')">Details</button><button class="miniAction replaceAction" onclick="openReplace(${index})">Ersetzen</button></div></div></div>`}).join("")}
+function renderPlan(){const days=[["Montag","push1"],["Dienstag","pull1"],["Mittwoch","legs"],["Donnerstag","rest"],["Freitag","push2"],["Samstag","pull2"],["Sonntag","rest"]],todayIndex=(new Date().getDay()+6)%7;$("weekPlan").innerHTML=days.map(([d,k],i)=>{const w=PLAN[k],open=!!openPlan[k],list=open&&w.ex.length?`<ol class="weekExercises">${w.ex.map(e=>`<li>${esc(e.name)}</li>`).join("")}</ol>`:"",rest=open&&!w.ex.length?`<p class="muted">Pause / Regeneration</p>`:"";return `<div class="weekItem ${i===todayIndex?"today":""}" onclick="togglePlan('${k}')"><div class="weekHeader"><b>${d}: ${esc(w.title)}</b><span class="weekToggle">${open?"−":"+"}</span></div>${list}${rest}</div>`}).join("")}
+function togglePlan(k){openPlan[k]=!openPlan[k];renderPlan()}
+function renderLibrary(){const q=($("librarySearch").value||"").toLowerCase(),arr=allExercises().filter(e=>(activeFilter==="all"||e.group===activeFilter)&&(!q||e.name.toLowerCase().includes(q)));$("libraryList").innerHTML=arr.map(e=>libraryItemHtml(e,false)).join("")||`<p class="muted">Keine Übung gefunden.</p>`}
+function libraryItemHtml(e,forReplace){return `<div class="libraryItem" ${forReplace?`onclick="replaceWith('${attr(e.name)}')"`:`onclick="openExercise('${attr(e.name)}')"`}><img src="${img(e.img)}" alt="${esc(e.name)}"><div><div class="exerciseName">${esc(e.name)}</div><div class="exerciseMeta">${esc(e.muscle)} · ${esc(e.type)}</div><div class="exerciseDescription">${esc(e.description)}</div><div class="exerciseSuggestion">Tipp: ${esc(e.tip)}</div></div></div>`}
+function openExercise(name){selectedExercise=findExercise(name);if(!selectedExercise)return;const e=selectedExercise;$("modalMuscle").textContent=e.muscle;$("modalTitle").textContent=e.name;$("exerciseVisual").src=img(e.img);$("modalSets").textContent=e.sets;$("modalReps").textContent=e.reps;$("modalRest").textContent=e.rest+"s";$("modalType").textContent=e.type;$("modalDescription").textContent=e.description;$("executionSteps").innerHTML=e.steps.map(x=>`<li>${esc(x)}</li>`).join("");$("modalTip").textContent=e.tip;$("modalAvoid").textContent=e.avoid;const l=lastSet(e.name),s=suggest(e);$("modalSuggestion").textContent=s.text;$("modalLast").textContent=l?`Letztes Training: ${l.weight} kg × ${l.reps}`:"Letztes Training: noch nichts";$("exerciseModal").classList.remove("hidden")}
+function openSetFor(name){openExercise(name);openSetModal()}
+function openSetModal(){if(!selectedExercise)return;const s=suggest(selectedExercise);$("setExerciseTitle").textContent=selectedExercise.name;$("setNo").value=setsFor(selectedExercise.name).length+1;$("setWeight").value=s.weight||"";$("setReps").value=s.reps||"";$("setNote").value="";$("setModal").classList.remove("hidden")}
+function saveSet(){if(!selectedExercise)return;const weight=Number($("setWeight").value),reps=Number($("setReps").value);if(!weight||!reps){alert("Bitte Gewicht und Wiederholungen eintragen.");return}const data=getSets();data.unshift({id:Date.now(),date:today(),workout:currentWorkout,workoutTitle:PLAN[currentWorkout].title,exercise:selectedExercise.name,setNo:Number($("setNo").value||1),weight,reps,note:$("setNote").value.trim(),muscle:selectedExercise.muscle,group:selectedExercise.group,optional:selectedExercise.opt});setSets(data);$("setModal").classList.add("hidden");$("exerciseModal").classList.add("hidden");renderAll()}
+function copyLastIntoSet(){const l=lastSet(selectedExercise?.name);if(l){$("setWeight").value=l.weight;$("setReps").value=l.reps;$("setNote").value=l.note||""}}
+function openReplace(index){replaceIndex=index;replaceFilter="all";$("replaceSearch").value="";$("replaceTitle").textContent=`Alternative für ${getTodayExercises()[index]?.name||"Übung"}`;$("replaceFilters").querySelectorAll(".filter").forEach((x,i)=>x.classList.toggle("active",i===0));renderReplaceList();$("replaceModal").classList.remove("hidden")}
+function renderReplaceList(){const q=($("replaceSearch").value||"").toLowerCase(),current=getTodayExercises()[replaceIndex],preferredGroup=replaceFilter==="all"&&current?current.group:replaceFilter,arr=allExercises().filter(e=>e.name!==current?.name&&(preferredGroup==="all"||e.group===preferredGroup)&&(!q||e.name.toLowerCase().includes(q)));$("replaceList").innerHTML=arr.map(e=>libraryItemHtml(e,true)).join("")||`<p class="muted">Keine Alternative gefunden.</p>`}
+function replaceWith(name){const e=findExercise(name);if(!e||replaceIndex===null)return;const exs=getTodayExercises();exs[replaceIndex]=e;saveTodayExercises(exs);$("replaceModal").classList.add("hidden");renderAll()}
+function resetTodayPlan(){if(!confirm("Heutige Ersetzungen zurücksetzen?"))return;const o=getOverrides();delete o[overrideKey()];setOverrides(o);renderAll()}
+function filteredSets(){const data=getSets();if(statsMode==="day")return data.filter(s=>s.date===today());if(statsMode==="month")return data.filter(s=>String(s.date).startsWith(monthKey()));return data}
+function renderStats(){const data=filteredSets();$("statWorkouts").textContent=new Set(data.map(s=>s.date)).size;$("statSets").textContent=data.length;$("statVolume").textContent=Math.round(data.reduce((a,s)=>a+s.weight*s.reps,0)).toLocaleString("de-AT");const best={};data.forEach(s=>{const score=s.weight*(1+s.reps/30);if(!best[s.exercise]||score>best[s.exercise].score)best[s.exercise]={...s,score}});$("statPR").textContent=Object.keys(best).length;const vol={};data.forEach(s=>vol[s.group||s.muscle||"Sonstiges"]=(vol[s.group||s.muscle||"Sonstiges"]||0)+s.weight*s.reps);const max=Math.max(1,...Object.values(vol));$("muscleBars").innerHTML=Object.entries(vol).sort((a,b)=>b[1]-a[1]).map(([m,v])=>`<div class="barRow"><div class="barTop"><span>${esc(m)}</span><span>${Math.round(v).toLocaleString("de-AT")} kg</span></div><div class="barTrack"><div class="barFill" style="width:${Math.round(v/max*100)}%"></div></div></div>`).join("")||`<p class="muted">Für diesen Zeitraum gibt es noch keine Daten.</p>`;$("prList").innerHTML=Object.values(best).sort((a,b)=>b.score-a.score).map(s=>`<div class="logItem"><div class="logTitle">${esc(s.exercise)}</div><div class="logMeta">PR: ${s.weight} kg × ${s.reps} · ${dateDE(s.date)}<br>Score: ${s.score.toFixed(1)}</div></div>`).join("")||`<p class="muted">Für diesen Zeitraum gibt es noch keine PRs.</p>`}
+function renderLog(){const q=($("logSearch").value||"").toLowerCase(),fw=$("logFilter").value||"",rows=getSets().filter(s=>(!q||s.exercise.toLowerCase().includes(q))&&(!fw||s.workout===fw));$("logList").innerHTML=rows.map(s=>`<div class="logItem"><div class="logTitle">${esc(s.exercise)}</div><div class="logMeta">${dateDE(s.date)} · ${esc(s.workoutTitle||"Training")} · Satz ${s.setNo}<br>${s.weight} kg × ${s.reps} Wdh.${s.note?" · "+esc(s.note):""}</div><div class="logActions"><button class="editBtn" onclick="editSet(${s.id})">Bearbeiten</button><button class="copyBtn" onclick="copySet(${s.id})">Kopieren</button><button class="deleteBtn" onclick="deleteSet(${s.id})">Löschen</button></div></div>`).join("")||`<p class="muted">Noch keine Einträge.</p>`}
+function editSet(id){const s=getSets().find(x=>x.id===id);if(!s)return;editId=id;$("editSetNo").value=s.setNo;$("editWeight").value=s.weight;$("editReps").value=s.reps;$("editNote").value=s.note||"";$("editModal").classList.remove("hidden")}
+function saveEdit(){const data=getSets(),i=data.findIndex(s=>s.id===editId);if(i>=0){data[i]={...data[i],setNo:Number($("editSetNo").value),weight:Number($("editWeight").value),reps:Number($("editReps").value),note:$("editNote").value};setSets(data)}$("editModal").classList.add("hidden");renderAll()}
+function copySet(id){const s=getSets().find(x=>x.id===id);if(!s)return;setSets([{...s,id:Date.now(),date:today()},...getSets()]);renderAll()}
+function deleteSet(id){if(confirm("Satz wirklich löschen?")){setSets(getSets().filter(s=>s.id!==id));renderAll()}}
+function exportJSON(){download("gymjournal-backup-v15.json",JSON.stringify({version:15,sets:getSets(),overrides:getOverrides()},null,2),"application/json")}
+function importJSON(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const b=JSON.parse(r.result);if(b.sets)setSets(b.sets);if(b.overrides)setOverrides(b.overrides);renderAll();alert("Backup importiert.")}catch{alert("Backup ungültig.")}};r.readAsText(f)}
+function exportCSV(){const rows=[["Datum","Workout","Übung","Satz","Gewicht","Wiederholungen","Muskel","Notiz"],...getSets().map(s=>[s.date,s.workoutTitle,s.exercise,s.setNo,s.weight,s.reps,s.muscle,s.note])];download("gymjournal.csv",rows.map(r=>r.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(";")).join("\n"),"text/csv")}
+function download(name,content,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click()}
+function clearAll(){if(confirm("Alle Daten löschen?")){localStorage.removeItem(TRAIN_KEY);renderAll()}}
 init();
